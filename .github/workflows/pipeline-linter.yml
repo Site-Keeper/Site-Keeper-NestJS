@@ -1,0 +1,25 @@
+name: PipelineLinterSiteKeeperNestJSBC
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  LinterSiteKeeperNestJSBC:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4 
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.14'
+
+      - name: NPM i
+        run: npm i
+        
+      - name: Linter
+        run: npm run lint
