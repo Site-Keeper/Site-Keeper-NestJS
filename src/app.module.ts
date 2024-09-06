@@ -8,21 +8,21 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({ 
-      type: "mysql",
-      host: "localhost",
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
       port: 3306,
-      username: "root",
-      password: "Rlwl2023.",
-      database: "ecommercer",
+      username: 'root',
+      password: 'Rlwl2023.',
+      database: 'ecommercer',
       entities: [],
-      synchronize: true
+      synchronize: true,
     }),
     UserModule,
     TaskModule,
     PermissionModule,
     RoleModule,
-    RoutineModule],
+    RoutineModule,
+  ],
 })
-
 export class AppModule {}
