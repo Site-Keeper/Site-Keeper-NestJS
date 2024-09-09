@@ -11,7 +11,7 @@ import { User } from './user/entities/user.entity';
 import { Task } from './task/entities/task.entity';
 import { Role } from './role/entities/role.entity';
 import { Routine } from './routine/entities/routine.entity';
-import { Topic } from './topic/entities/topic.entity'
+import { Topic } from './topic/entities/topic.entity';
 
 @Module({
   imports: [

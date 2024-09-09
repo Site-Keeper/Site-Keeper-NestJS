@@ -1,5 +1,6 @@
 import { Status } from 'src/common/enums/status.enum';
 import { Routine } from 'src/routine/entities/routine.entity';
+import { Topic } from 'src/topic/entities/topic.entity';
 import {
   Column,
   Entity,
@@ -37,4 +38,8 @@ export class Task {
 
   @Column()
   is_deleted: boolean;
+
+  @ManyToOne(() => Topic)
+  @JoinColumn({ name: 'topic_id' })
+  topic_id: Topic;
 }

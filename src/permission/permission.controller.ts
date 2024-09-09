@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Patch, Param, Delete } from '@nestjs/common';
 import { PermissionService } from './permission.service';
 
 @Controller('permission')
@@ -28,10 +21,8 @@ export class PermissionController {
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-  ) {
-    return this.permissionService.update(+id,);
+  update(@Param('id') id: string) {
+    return this.permissionService.update(+id);
   }
 
   @Delete(':id')
