@@ -31,6 +31,7 @@ import { Topic } from './topic/entities/topic.entity'
     PermissionModule,
     RoleModule,
     RoutineModule,
+    TopicModule,
   ],
 })
 export class AppModule {}
