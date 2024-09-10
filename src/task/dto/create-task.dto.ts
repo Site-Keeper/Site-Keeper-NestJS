@@ -3,9 +3,6 @@ import { Status } from "src/enums/status.enum"
 
 export class CreateTaskDto {
     
-    @IsInt()
-    routine_id: number
-
     @IsString()
     title: string
 
@@ -24,13 +21,10 @@ export class CreateTaskDto {
 
     @IsBoolean()
     is_deleted: boolean
+    
+    @IsInt()
+    routine_id: number
 
     @IsInt()
     topic_id: number
-
-    @IsInt()
-    created_by: number
-
-    @IsInt()
-    assigned_to: number
 }

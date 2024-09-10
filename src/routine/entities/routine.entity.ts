@@ -1,9 +1,11 @@
+import { Task } from 'src/task/entities/task.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -27,4 +29,7 @@ export class Routine {
 
   @Column()
   is_deleted: boolean;
+
+  @OneToMany(() => Task, task => task.routine_id)
+  tasks: Task[];
 }

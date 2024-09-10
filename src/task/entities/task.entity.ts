@@ -15,13 +15,6 @@ export class Task {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Routine)
-  @JoinColumn({ name: 'routine_id' })
-  routine: Routine;
-
-  @Column()
-  routine_id: number;
-
   @Column()
   title: string;
 
@@ -40,15 +33,17 @@ export class Task {
   @Column()
   is_deleted: boolean;
 
-  @ManyToOne(() => User )
-  @JoinColumn({ name: 'assigned_to'})
-  assigned_to: User;
+  @ManyToOne(() => Routine, routine => routine.tasks)
+  @JoinColumn({ name: 'routine_id' })
+  routine: Routine;
 
-  @ManyToOne(() => User )
-  @JoinColumn({ name: 'created_by'})
-  created_by: User;
+  @Column()
+  routine_id: number;
 
   @ManyToOne(() => Topic)
   @JoinColumn({ name: 'topic_id' })
-  topic_id: Topic;
+  topic: Topic;
+
+  @Column()
+  topic_id: number;
 }
