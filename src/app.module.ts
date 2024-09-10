@@ -12,6 +12,7 @@ import { Task } from './task/entities/task.entity';
 import { Role } from './role/entities/role.entity';
 import { Routine } from './routine/entities/routine.entity';
 import { Topic } from './topic/entities/topic.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { Topic } from './topic/entities/topic.entity';
     RoleModule,
     RoutineModule,
     TopicModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

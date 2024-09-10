@@ -6,16 +6,20 @@ import {
   Param,
   Delete,
   Body,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(AuthGuard)
   @Post()
-  create() {
-    return this.userService.create();
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.userService.create(createUserDto);
   }
 
   @Get()
@@ -24,8 +28,13 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findByID(@Param('id') id: string) {
     return this.userService.findOne(+id);
+  }
+
+  @Get(':doc_number')
+  findByDocNumber(@Param('doc_number') doc_number: string) {
+    return this.userService.findOne(+doc_number);
   }
 
   @Patch(':id')
