@@ -1,6 +1,7 @@
 import { Status } from 'src/common/enums/status.enum';
 import { Routine } from 'src/routine/entities/routine.entity';
 import { Topic } from 'src/topic/entities/topic.entity';
+import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   Entity,
@@ -33,11 +34,19 @@ export class Task {
   @Column()
   space_id: number;
 
-  @Column()
+  @Column({ nullable: true })
   object_id: number;
 
   @Column()
   is_deleted: boolean;
+
+  @ManyToOne(() => User )
+  @JoinColumn({ name: 'assigned_to'})
+  assigned_to: User;
+
+  @ManyToOne(() => User )
+  @JoinColumn({ name: 'created_by'})
+  created_by: User;
 
   @ManyToOne(() => Topic)
   @JoinColumn({ name: 'topic_id' })
