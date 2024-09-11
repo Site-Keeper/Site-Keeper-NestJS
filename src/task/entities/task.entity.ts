@@ -1,16 +1,17 @@
 import { Status } from 'src/common/enums/status.enum';
+import { Topic } from 'src/entities/topic.entity';
 import { Routine } from 'src/routine/entities/routine.entity';
-import { Topic } from 'src/topic/entities/topic.entity';
-import { User } from 'src/user/entities/user.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity('tasks')
 export class Task {
   @PrimaryGeneratedColumn()
   id: number;
@@ -46,4 +47,16 @@ export class Task {
 
   @Column()
   topic_id: number;
+
+  @Column()
+  created_by: number;
+
+  @Column()
+  updated_by: number;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at: Date;
 }

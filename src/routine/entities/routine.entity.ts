@@ -1,15 +1,18 @@
+
 import { Task } from 'src/task/entities/task.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity('routines')
 export class Routine {
   @PrimaryGeneratedColumn()
   id: number;
@@ -33,17 +36,21 @@ export class Routine {
   @Column()
   assigned_to: number;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'created_by' })
-  createdBy: User;
-
-  @Column()
-  created_by: number;
-
-
   @Column()
   is_deleted: boolean;
 
   @OneToMany(() => Task, task => task.routine_id)
   tasks: Task[];
+
+  @Column()
+  created_by: number;
+
+  @Column()
+  updated_by: number;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at: Date;
 }
