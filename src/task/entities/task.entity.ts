@@ -1,17 +1,18 @@
 import { Status } from 'src/common/enums/status.enum';
-import { Routine } from 'src/routine/entities/routine.entity';
-import { Topic } from 'src/topic/entities/topic.entity';
-import { User } from 'src/user/entities/user.entity';
+import { Topic } from 'src/entities/topic.entity';
+import { Routines } from 'src/routine/entities/routine.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class Task {
+export class Tasks {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -33,9 +34,9 @@ export class Task {
   @Column()
   is_deleted: boolean;
 
-  @ManyToOne(() => Routine, routine => routine.tasks)
+  @ManyToOne(() => Routines, routine => routine.tasks)
   @JoinColumn({ name: 'routine_id' })
-  routine: Routine;
+  routine: Routines;
 
   @Column()
   routine_id: number;
@@ -46,4 +47,16 @@ export class Task {
 
   @Column()
   topic_id: number;
+
+  @Column()
+  created_by: number;
+
+  @Column()
+  updated_by: number;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at: Date;
 }

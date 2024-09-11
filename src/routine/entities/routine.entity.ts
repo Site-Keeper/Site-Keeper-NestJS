@@ -1,16 +1,19 @@
-import { Task } from 'src/task/entities/task.entity';
-import { User } from 'src/user/entities/user.entity';
+
+import { Tasks } from 'src/task/entities/task.entity';
+import { Users } from 'src/user/entities/user.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class Routine {
+export class Routines {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -26,24 +29,28 @@ export class Routine {
   @Column({ type: 'jsonb', array: false, default: () => "'[]'" })
   days: string[];
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => Users)
   @JoinColumn({ name: 'assigned_to' })
-  assignedTo: User;
+  assignedTo: Users;
 
   @Column()
   assigned_to: number;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'created_by' })
-  createdBy: User;
+  @Column()
+  is_deleted: boolean;
+
+  @OneToMany(() => Tasks, task => task.routine_id)
+  tasks: Tasks[];
 
   @Column()
   created_by: number;
 
-
   @Column()
-  is_deleted: boolean;
+  updated_by: number;
 
-  @OneToMany(() => Task, task => task.routine_id)
-  tasks: Task[];
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at: Date;
 }
