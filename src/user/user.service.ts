@@ -13,15 +13,15 @@ export class UserService {
     private readonly userRepository: Repository<User>
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto, userID: number) {
     const users: Partial<User>[] = createUserDto.doc_numbers.map(
       (docNumber) => ({
         doc_number: docNumber,
         password: bcrypt.hashSync(docNumber.toString(), 10),
         role_id: createUserDto.role_id,
-        perssonel_type: createUserDto.perssonel_type,
-        created_by: 1,
-        updated_by: 1,
+        perssonel_type: createUserDto.perssonel_type || null,
+        created_by: userID,
+        updated_by: userID,
       })
     );
 
@@ -51,9 +51,10 @@ export class UserService {
 
   findOneByDocNumber(doc_number: number) {
     try {
-      this.userRepository.findOneBy({ doc_number });
+      const user = this.userRepository.findOneBy({ doc_number });
+      return user;
     } catch (error) {
-      return error;
+      throw error;
     }
   }
 
