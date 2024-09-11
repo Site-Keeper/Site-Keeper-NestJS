@@ -1,5 +1,5 @@
 export enum perssonelType {
-  MAINTENANCE = 'MAINTENANCE',
+  MAINTENANCE = 'Maintenance',
   JANITORIAL = ' Janitorial',
   SECURITY = 'Security',
   OTHER = 'Other',
