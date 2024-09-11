@@ -1,6 +1,6 @@
 import { Seeder } from 'typeorm-extension';
 import { DataSource } from 'typeorm';
-import { Topic } from '../../topic/entities/topic.entity';
+import { Topic } from '../../entities/topic.entity';
 
 export default class CreateTopics implements Seeder {
   public async run(dataSource: DataSource): Promise<void> {

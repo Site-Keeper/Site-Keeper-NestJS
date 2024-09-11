@@ -1,5 +1,5 @@
+import { Role } from 'src/entities/role.entity';
 import { perssonelType } from 'src/enums/perssonel-type.enum';
-import { Role } from 'src/role/entities/role.entity';
 import {
   Column,
   CreateDateColumn,
@@ -27,7 +27,7 @@ export class User {
   @Column()
   password: string;
 
-  @ManyToOne(() => Role)
+  @ManyToOne(() => Role, role => role.users)
   @JoinColumn({ name: 'role_id' })
   role: Role;
 
@@ -36,6 +36,9 @@ export class User {
 
   @Column({ nullable: true })
   perssonel_type: perssonelType;
+
+  @Column({ default: false })
+  is_deleted: boolean;
 
   @Column()
   created_by: number;
@@ -48,7 +51,4 @@ export class User {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
-
-  @Column({ default: false })
-  is_deleted: boolean;
 }
