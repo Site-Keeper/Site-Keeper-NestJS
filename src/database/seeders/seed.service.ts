@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-import CreateRoles from './role.seed';
-import CreateTopics from './topic.seed';
-import CreateUsers from './user.seed';
+import CreateRoles from './roles.seed';
+import CreateTopics from './topics.seed';
+import CreateUsers from './users.seed';
+import CreatePermissions from './permissions.seed';
 
 @Injectable()
 export class SeedService {
@@ -17,5 +18,8 @@ export class SeedService {
 
     const userSeeders = new CreateUsers();
     await userSeeders.run(this.dataSource);
+
+    const permissionsSeeders = new CreatePermissions();
+    await permissionsSeeders.run(this.dataSource);
   }
 }

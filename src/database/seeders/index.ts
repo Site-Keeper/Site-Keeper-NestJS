@@ -1,2 +1,2 @@
-export * from './role.seed';
-export * from './topic.seed';
+export * from './roles.seed';
+export * from './topics.seed';
