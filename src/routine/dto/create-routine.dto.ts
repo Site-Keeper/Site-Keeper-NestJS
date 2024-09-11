@@ -1,4 +1,5 @@
 import { IsArray, IsBoolean, IsDate, IsNumber, IsString } from "class-validator";
+import { Type } from "class-transformer";
 
 export class CreateRoutineDto {
 
@@ -6,9 +7,11 @@ export class CreateRoutineDto {
   name: string
 
   @IsDate()
+  @Type(() => Date)
   start_time : Date
 
   @IsDate()
+  @Type(() => Date)
   end_time : Date
 
   @IsArray()
