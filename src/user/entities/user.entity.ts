@@ -1,4 +1,3 @@
-
 import { perssonelType } from 'src/enums/perssonel-type.enum';
 import { Role } from 'src/role/entities/role.entity';
 import {

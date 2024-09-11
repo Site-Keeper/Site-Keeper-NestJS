@@ -1,13 +1,14 @@
-import { Controller, Get, Post, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Param, Delete, Body } from '@nestjs/common';
 import { TaskService } from './task.service';
+import { CreateTaskDto } from './dto/create-task.dto';
 
 @Controller('task')
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Post()
-  create() {
-    return this.taskService.create();
+  create(@Body() CreateTaskDto: CreateTaskDto) {
+    return this.taskService.create(CreateTaskDto);
   }
 
   @Get()
