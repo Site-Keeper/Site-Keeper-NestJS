@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { perssonelType } from 'src/enums/perssonel-type.enum';
 
 export class CreateUserDto {
@@ -8,6 +8,7 @@ export class CreateUserDto {
   @IsNumber()
   role_id: number;
 
+  @IsOptional()
   @IsString()
   perssonel_type: perssonelType;
 }

@@ -7,6 +7,7 @@ import { PermissionModule } from './permission/permission.module';
 import { ConfigModule } from '@nestjs/config';
 import { TopicModule } from './topic/topic.module';
 import { DatabaseModule } from './database.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
