@@ -1,14 +1,14 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional } from 'class-validator';
 import { perssonelType } from 'src/enums/perssonel-type.enum';
 
 export class CreateUserDto {
-  @IsNumber()
+  @IsNumber({}, { each: true })
   doc_numbers: number[];
 
   @IsNumber()
   role_id: number;
 
   @IsOptional()
-  @IsString()
+  @IsEnum(perssonelType)
   perssonel_type: perssonelType;
 }

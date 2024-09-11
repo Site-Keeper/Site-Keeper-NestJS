@@ -1,11 +1,11 @@
-import { IsNumber, IsString, Matches, MinLength } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class LoginDto {
-  
   @IsNumber()
   doc_number: string;
 
-  // @IsString()
+  @IsString()
+  // TODO: Pasar estas verificaciones al actualizar contraseña
   // @MinLength(8, { message: 'Password must be at least 8 characters long' })
   // @Matches(/(?=.*\d)/, { message: 'Password must contain at least one number' })
   // @Matches(/(?=.*[a-z])/, {
