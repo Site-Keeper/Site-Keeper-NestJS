@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
@@ -13,7 +17,15 @@ export class AuthService {
 
   async ValidateUser(doc_number: number, pass: string): Promise<any> {
     try {
-      const user = await this.usersService.findOneByDocNumber(doc_number);
+      const user: User = await this.usersService.findOneByDocNumber(doc_number);
+      if (!user) {
+        throw new NotFoundException(
+          'User not found, Verify your credentials or contact your administrator to register'
+        );
+      }
+      if (user.is_deleted) {
+        throw new NotFoundException();
+      }
       const isMatch = await bcrypt.compare(pass, user?.password);
       if (!isMatch) {
         throw new UnauthorizedException();

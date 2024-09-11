@@ -18,7 +18,7 @@ export class UserService {
         doc_number: docNumber,
         password: bcrypt.hashSync(docNumber.toString(), 10),
         role_id: createUserDto.role_id,
-        perssonel_type: createUserDto.perssonel_type,
+        perssonel_type: createUserDto.perssonel_type || null,
         created_by: 1,
         updated_by: 1,
       })
