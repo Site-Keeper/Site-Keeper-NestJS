@@ -23,9 +23,7 @@ export class RoutineController {
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string, @Body() updateRoutineDto: UpdateRoutineDto
-  ) {
+  update(@Param('id') id: string, @Body() updateRoutineDto: UpdateRoutineDto) {
     return this.routineService.update(+id, updateRoutineDto);
   }
 
