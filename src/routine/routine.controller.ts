@@ -1,13 +1,15 @@
-import { Controller, Get, Post, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Param, Delete, Body } from '@nestjs/common';
 import { RoutineService } from './routine.service';
+import { CreateRoutineDto } from './dto/create-routine.dto';
+import { UpdateRoutineDto } from './dto/update-routine.dto';
 
 @Controller('routine')
 export class RoutineController {
   constructor(private readonly routineService: RoutineService) {}
 
   @Post()
-  create(/*@Body() createRoutineDto: CreateRoutineDto*/) {
-    return this.routineService.create(/*createRoutineDto*/);
+  create(@Body() createRoutineDto: CreateRoutineDto) {
+    return this.routineService.create(createRoutineDto);
   }
 
   @Get()
@@ -22,9 +24,9 @@ export class RoutineController {
 
   @Patch(':id')
   update(
-    @Param('id') id: string /* @Body() updateRoutineDto: UpdateRoutineDto*/
+    @Param('id') id: string, @Body() updateRoutineDto: UpdateRoutineDto
   ) {
-    return this.routineService.update(+id /* updateRoutineDto*/);
+    return this.routineService.update(+id, updateRoutineDto);
   }
 
   @Delete(':id')
