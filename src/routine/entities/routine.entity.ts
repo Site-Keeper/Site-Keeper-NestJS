@@ -20,12 +20,26 @@ export class Routine {
   @Column({ type: 'timestamp' })
   start_time: Date;
 
+  @Column({ type: 'timestamp' })
+  end_time: Date;
+
+  @Column({ type: 'jsonb', array: false, default: () => "'[]'" })
+  days: string[];
+
   @ManyToOne(() => User)
-  @JoinColumn({ name: 'user_id' })
-  user: User;
+  @JoinColumn({ name: 'assigned_to' })
+  assignedTo: User;
 
   @Column()
-  user_id: number;
+  assigned_to: number;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'created_by' })
+  createdBy: User;
+
+  @Column()
+  created_by: number;
+
 
   @Column()
   is_deleted: boolean;
