@@ -1,24 +1,30 @@
-import { User } from "src/user/entities/user.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { User } from 'src/user/entities/user.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Routine {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column({ type: 'timestamp' })
-    start_time: Date;
+  @Column({ type: 'timestamp' })
+  start_time: Date;
 
-    @ManyToOne(() => User)
-    @JoinColumn({name: 'user_id'})
-    user: User;
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
-    @Column()
-    user_id: number;
+  @Column()
+  user_id: number;
 
-    @Column()
-    is_deleted: boolean;
+  @Column()
+  is_deleted: boolean;
 }

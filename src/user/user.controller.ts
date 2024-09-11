@@ -30,7 +30,7 @@ export class UserController {
 
   @Patch(':id')
   update(@Body('role_id') role_id: string) {
-    return this.userService.update({role_id: +role_id});
+    return this.userService.update({ role_id: +role_id });
   }
 
   @Delete(':id')
