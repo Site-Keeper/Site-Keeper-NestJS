@@ -1,6 +1,6 @@
 import { Status } from 'src/common/enums/status.enum';
 import { Topic } from 'src/entities/topic.entity';
-import { Routines } from 'src/routine/entities/routine.entity';
+import { Routine } from 'src/routine/entities/routine.entity';
 import {
   Column,
   CreateDateColumn,
@@ -11,8 +11,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
-export class Tasks {
+@Entity('tasks')
+export class Task {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -34,9 +34,9 @@ export class Tasks {
   @Column()
   is_deleted: boolean;
 
-  @ManyToOne(() => Routines, routine => routine.tasks)
+  @ManyToOne(() => Routine, routine => routine.tasks)
   @JoinColumn({ name: 'routine_id' })
-  routine: Routines;
+  routine: Routine;
 
   @Column()
   routine_id: number;

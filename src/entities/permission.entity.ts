@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Roles } from "./role.entity";
+import { Role } from "./role.entity";
 
-@Entity()
-export class Permissions {
+@Entity('permissions')
+export class Permission {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,9 +21,9 @@ export class Permissions {
   @Column()
   can_delete: boolean
 
-  @ManyToOne(() => Roles, role => role.permission )
+  @ManyToOne(() => Role, role => role.permission )
   @JoinColumn({ name: 'role_id' })
-  role: Roles;
+  role: Role;
 
   @Column()
   role_id: number

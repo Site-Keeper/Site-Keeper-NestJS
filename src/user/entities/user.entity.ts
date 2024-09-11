@@ -1,4 +1,4 @@
-import { Roles } from 'src/entities/role.entity';
+import { Role } from 'src/entities/role.entity';
 import { perssonelType } from 'src/enums/perssonel-type.enum';
 import {
   Column,
@@ -10,8 +10,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
-export class Users {
+@Entity('users')
+export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -27,9 +27,9 @@ export class Users {
   @Column()
   password: string;
 
-  @ManyToOne(() => Roles, role => role.users)
+  @ManyToOne(() => Role, role => role.users)
   @JoinColumn({ name: 'role_id' })
-  role: Roles;
+  role: Role;
 
   @Column()
   role_id: number;

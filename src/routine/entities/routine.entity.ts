@@ -1,6 +1,6 @@
 
-import { Tasks } from 'src/task/entities/task.entity';
-import { Users } from 'src/user/entities/user.entity';
+import { Task } from 'src/task/entities/task.entity';
+import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -12,8 +12,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
-export class Routines {
+@Entity('routines')
+export class Routine {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -29,9 +29,9 @@ export class Routines {
   @Column({ type: 'jsonb', array: false, default: () => "'[]'" })
   days: string[];
 
-  @ManyToOne(() => Users)
+  @ManyToOne(() => User)
   @JoinColumn({ name: 'assigned_to' })
-  assignedTo: Users;
+  assignedTo: User;
 
   @Column()
   assigned_to: number;
@@ -39,8 +39,8 @@ export class Routines {
   @Column()
   is_deleted: boolean;
 
-  @OneToMany(() => Tasks, task => task.routine_id)
-  tasks: Tasks[];
+  @OneToMany(() => Task, task => task.routine_id)
+  tasks: Task[];
 
   @Column()
   created_by: number;
