@@ -1,20 +1,13 @@
-import { IsEmail, IsString, Matches, MinLength } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
+import { perssonelType } from 'src/enums/perssonel-type.enum';
 
 export class CreateUserDto {
-  @IsString()
-  name: string;
+  @IsNumber()
+  doc_numbers: number[];
+
+  @IsNumber()
+  role_id: number;
 
   @IsString()
-  @MinLength(8, { message: 'Password must be at least 8 characters long' })
-  @Matches(/(?=.*\d)/, { message: 'Password must contain at least one number' })
-  @Matches(/(?=.*[a-z])/, {
-    message: 'Password must contain at least one lowercase letter',
-  })
-  @Matches(/(?=.*[A-Z])/, {
-    message: 'Password must contain at least one uppercase letter',
-  })
-  password: string;
-
-  @IsEmail()
-  email: string;
+  perssonel_type: perssonelType;
 }

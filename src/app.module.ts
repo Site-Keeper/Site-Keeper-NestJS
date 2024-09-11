@@ -17,6 +17,7 @@ import { DatabaseModule } from './database.module';
     RoleModule,
     RoutineModule,
     TopicModule,
+    AuthModule,
     DatabaseModule,
   ],
 })
