@@ -2,41 +2,66 @@ import {
   Controller,
   Get,
   Post,
-  Body,
   Patch,
   Param,
   Delete,
+  Body,
+  Request,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import {
+  Permissions,
+  PrivateService,
+  toTheEntity,
+} from 'src/common/decorators/permissions.decorator';
+import { ApiTags } from '@nestjs/swagger';
+import { User } from './entities/user.entity';
+import { ApiDocPostUser } from './docs/users.swager.decorators';
 
-@Controller('user')
+@Controller('users')
+@ApiTags('Users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  @PrivateService()
+  @Permissions('can_create')
+  @toTheEntity('users')
+  @ApiDocPostUser(User)
+  async create(@Body() createUserDto: CreateUserDto, @Request() req) {
+    return this.userService.create(createUserDto, req.user.id);
   }
 
+  @PrivateService()
   @Get()
-  findAll() {
+  async findAll() {
     return this.userService.findAll();
   }
 
+  @PrivateService()
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findByID(@Param('id') id: string) {
     return this.userService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  @PrivateService()
+  @Get(':doc_number')
+  findByDocNumber(@Param('doc_number') doc_number: string) {
+    return this.userService.findOne(+doc_number);
   }
 
+  @PrivateService()
+  @Patch(':id')
+  async update(@Param('id') id: string, @Body('role_id') role_id: string) {
+    return this.userService.update({ role_id: +role_id });
+  }
+
+  @PrivateService()
+  @Permissions('can_delete')
+  @toTheEntity('users')
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.userService.remove(+id);
   }
 }
