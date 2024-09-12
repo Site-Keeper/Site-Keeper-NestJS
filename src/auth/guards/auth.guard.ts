@@ -7,12 +7,16 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { PermissionJWT, UserJWT } from 'src/common/interfaces/jwt.interface';
+import { Reflector } from '@nestjs/core';
+import { permission } from 'process';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private reflector: Reflector
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -22,9 +26,23 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
     try {
-      const payload = await this.jwtService.verifyAsync(token, {
+      const payload: UserJWT = await this.jwtService.verifyAsync(token, {
         secret: this.configService.get<string>('JWT_SECRET'),
       });
+
+      const entity = this.reflector.get<string[]>(
+        'entity',
+        context.getHandler()
+      );
+
+      const userPermissions = payload.permissions;
+
+      const entityPermissions = userPermissions.find(
+        (permission: PermissionJWT) => {
+          return permission.entity === entity[0];
+        }
+      );
+
       request['user'] = payload;
     } catch {
       throw new UnauthorizedException();

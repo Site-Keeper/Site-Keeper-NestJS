@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
+import { permission } from 'process';
 
 @Injectable()
 export class AuthService {
@@ -19,19 +20,16 @@ export class AuthService {
     try {
       const user: User = await this.usersService.findOneByDocNumber(doc_number);
 
-      console.log(user);
-
-      if (!user) {
+      if (!user || user.is_deleted) {
         throw new NotFoundException(
           'User not found, Verify your credentials or contact your administrator to register'
         );
       }
-      if (user.is_deleted) {
-        throw new NotFoundException();
-      }
       const isMatch = await bcrypt.compare(pass, user?.password);
       if (!isMatch) {
-        throw new UnauthorizedException();
+        throw new NotFoundException(
+          'User not found, Verify your credentials or contact your administrator to register'
+        );
       }
       if (!user.name || !user.email) {
         throw new UnauthorizedException(
@@ -55,7 +53,7 @@ export class AuthService {
       const payload = {
         id: verifiedUser.id,
         doc_number: verifiedUser.doc_number,
-        role: verifiedUser.role_id,
+        permissions: verifiedUser.role,
       };
       return {
         token: this.jwtService.sign(payload),

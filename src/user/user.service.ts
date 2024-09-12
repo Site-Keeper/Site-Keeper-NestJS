@@ -5,20 +5,27 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
+import { Role } from 'src/entities/role.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Role)
+    private readonly roleRepository: Repository<Role>
   ) {}
 
   async create(createUserDto: CreateUserDto, userID: number) {
+    const role = await this.roleRepository.findOneBy({
+      id: createUserDto.role_id,
+    });
+
     const users: Partial<User>[] = createUserDto.doc_numbers.map(
       (docNumber) => ({
         doc_number: docNumber,
         password: bcrypt.hashSync(docNumber.toString(), 10),
-        role_id: createUserDto.role_id,
+        role: role,
         perssonel_type: createUserDto.perssonel_type || null,
         created_by: userID,
         updated_by: userID,
@@ -49,9 +56,15 @@ export class UserService {
     return `This action returns a #${id} user`;
   }
 
-  findOneByDocNumber(doc_number: number) {
+  async findOneByDocNumber(doc_number: number) {
     try {
-      const user = this.userRepository.findOneBy({ doc_number });
+      const user: User = await this.userRepository.findOne({
+        where: { doc_number },
+        relations: ['role'],
+      });
+
+      console.log(user.role);
+
       return user;
     } catch (error) {
       throw error;

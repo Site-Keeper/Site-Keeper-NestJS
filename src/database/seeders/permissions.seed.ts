@@ -1,10 +1,16 @@
 import { Seeder } from 'typeorm-extension';
 import { DataSource } from 'typeorm';
-import { Permission } from '../../permission/entities/permission.entity';
+import { Permission } from 'src/entities/permission.entity';
+import { Role } from 'src/entities/role.entity';
 
 export default class CreatePermissions implements Seeder {
   public async run(dataSource: DataSource): Promise<void> {
     const permissionRepository = dataSource.getRepository(Permission);
+    const roleRepository = dataSource.getRepository(Role);
+
+    const adminRole = await roleRepository.findOne({ where: { id: 1 } });
+    const perssonelRole = await roleRepository.findOne({ where: { id: 2 } });
+    const clientRole = await roleRepository.findOne({ where: { id: 3 } });
 
     const permissionsData = [
       // Permissions for routine
@@ -14,7 +20,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: true,
         can_delete: true,
-        role_id: 1,
+        role: adminRole,
       },
       {
         entity: 'routines',
@@ -22,7 +28,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: false,
         can_delete: false,
-        role_id: 2,
+        role: perssonelRole,
       },
       {
         entity: 'routines',
@@ -30,7 +36,7 @@ export default class CreatePermissions implements Seeder {
         can_read: false,
         can_update: false,
         can_delete: false,
-        role_id: 3,
+        role: clientRole,
       },
 
       // Permissions for task
@@ -40,7 +46,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: true,
         can_delete: true,
-        role_id: 1,
+        role: adminRole,
       },
       {
         entity: 'tasks',
@@ -48,7 +54,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: true,
         can_delete: false,
-        role_id: 2,
+        role: perssonelRole,
       },
       {
         entity: 'tasks',
@@ -56,7 +62,7 @@ export default class CreatePermissions implements Seeder {
         can_read: false,
         can_update: false,
         can_delete: false,
-        role_id: 3,
+        role: clientRole,
       },
 
       // Permissions for report
@@ -66,7 +72,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: true,
         can_delete: true,
-        role_id: 1,
+        role: adminRole,
       },
       {
         entity: 'reports',
@@ -74,7 +80,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: true,
         can_delete: false,
-        role_id: 2,
+        role: perssonelRole,
       },
       {
         entity: 'reports',
@@ -82,7 +88,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: false,
         can_delete: false,
-        role_id: 3,
+        role: clientRole,
       },
 
       // Permissions for space
@@ -92,7 +98,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: true,
         can_delete: true,
-        role_id: 1,
+        role: adminRole,
       },
       {
         entity: 'spaces',
@@ -100,7 +106,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: false,
         can_delete: false,
-        role_id: 2,
+        role: perssonelRole,
       },
       {
         entity: 'spaces',
@@ -108,7 +114,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: false,
         can_delete: false,
-        role_id: 3,
+        role: clientRole,
       },
 
       // Permissions for object
@@ -118,7 +124,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: true,
         can_delete: true,
-        role_id: 1,
+        role: adminRole,
       },
       {
         entity: 'objects',
@@ -126,7 +132,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: false,
         can_delete: false,
-        role_id: 2,
+        role: perssonelRole,
       },
       {
         entity: 'objects',
@@ -134,7 +140,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: false,
         can_delete: false,
-        role_id: 3,
+        role: clientRole,
       },
 
       // Permissions for lostObject
@@ -144,7 +150,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: true,
         can_delete: true,
-        role_id: 1,
+        role: adminRole,
       },
       {
         entity: 'lostObjects',
@@ -152,7 +158,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: true,
         can_delete: false,
-        role_id: 2,
+        role: perssonelRole,
       },
       {
         entity: 'lostObjects',
@@ -160,7 +166,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: false,
         can_delete: false,
-        role_id: 3,
+        role: clientRole,
       },
 
       // Permissions for user
@@ -170,7 +176,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: true,
         can_delete: true,
-        role_id: 1,
+        role: adminRole,
       },
       {
         entity: 'users',
@@ -178,7 +184,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: true,
         can_delete: false,
-        role_id: 2,
+        role: perssonelRole,
       },
       {
         entity: 'users',
@@ -186,14 +192,14 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: true,
         can_delete: false,
-        role_id: 3,
+        role: clientRole,
       },
     ];
 
     for (const permission of permissionsData) {
       const permissionExists = await permissionRepository.findOneBy({
         entity: permission.entity,
-        role_id: permission.role_id,
+        role: permission.role,
       });
 
       if (!permissionExists) {
