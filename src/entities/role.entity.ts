@@ -10,9 +10,11 @@ export class Role {
   @Column({ unique: true })
   name: string;
 
-  @OneToMany(() => User, user => user.role_id)
+  @OneToMany(() => User, (user) => user.role)
   users: User[];
 
-  @OneToMany(() => Permission, permission => permission.role_id)
-  permission: Permissions[]
+  @OneToMany(() => Permission, (permission) => permission.role, {
+    eager: true,
+  })
+  permissions: Permissions[];
 }

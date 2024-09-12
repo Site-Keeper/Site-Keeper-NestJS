@@ -63,13 +63,6 @@ export class User {
   role: Role;
 
   @ApiProperty({
-    description: 'The ID of the role associated with the user',
-    example: 1,
-  })
-  @Column()
-  role_id: number;
-
-  @ApiProperty({
     description: 'The personnel type of the user',
     enum: perssonelType,
     example: perssonelType.JANITORIAL,
