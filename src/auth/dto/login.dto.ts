@@ -3,19 +3,17 @@ import { IsString } from 'class-validator';
 
 export class LoginDto {
   @ApiProperty({
-    description: 'The document number of the user. Should be a unique identifier.',
-    example: '123456789',
-    type: String,
+    description:
+      'The document number of the user. Should be a unique identifier.',
+    example: 1234567,
   })
   @IsString()
   doc_number: string;
 
   @ApiProperty({
     description: 'The password of the user. Should be a string.',
-    example: 'password123',
-    type: String,
+    example: 123456,
   })
   @IsString()
   password: string;
 }
-

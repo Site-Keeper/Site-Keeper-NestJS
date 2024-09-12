@@ -6,7 +6,7 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'Array of document numbers',
     example: [12345678, 87654321],
-    type: [Number], // Specify the type as an array of numbers
+    type: [Number],
   })
   @IsNumber({}, { each: true })
   doc_numbers: number[];

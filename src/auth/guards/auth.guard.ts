@@ -9,6 +9,8 @@ import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { PermissionJWT, UserJWT } from 'src/common/interfaces/jwt.interface';
 import { Reflector } from '@nestjs/core';
+import { ValidEntities } from 'src/enums/entities.enum';
+import { ValidPermissions } from 'src/enums/valid-permissions.enum';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -43,30 +45,15 @@ export class AuthGuard implements CanActivate {
       }
 
       if (permissions && entity) {
-        const validEntities = [
-          'routines',
-          'tasks',
-          'reports',
-          'spaces',
-          'objects',
-          'lostObjects',
-          'users',
-        ];
-
-        const validPermissions = [
-          'can_create',
-          'can_update',
-          'can_delete',
-          'can_read',
-        ];
-
-        if (!validPermissions.includes(permissions[0])) {
+        if (!(Object.values(ValidEntities) as string[]).includes(entity[0])) {
           throw new UnauthorizedException(
             `[${permissions[0]}] is an invalid permission`
           );
         }
 
-        if (!validEntities.includes(entity[0])) {
+        if (
+          !(Object.values(ValidPermissions) as string[]).includes(entity[0])
+        ) {
           throw new UnauthorizedException(
             `[${entity[0]}] is an invalid entity`
           );

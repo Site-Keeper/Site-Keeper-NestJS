@@ -5,12 +5,11 @@ import {
   ApiCreateResponses,
 } from 'src/common/docs/swagger.decorators';
 
-export function ApiDocPostUser<T>(entity: Type<T>) {
-  const description =
-    'you can create users with the same role by sending an array with their ID numbers';
+export function ApiDocValidateUser<T>(entity: Type<T>) {
+  const description = 'You can use this endpoint to validate a user with a JWT';
   return applyDecorators(
     ApiOperation({
-      summary: 'create new user with an array',
+      summary: 'Validate User',
       description,
     }),
     ApiCreateResponses(entity),

@@ -10,7 +10,16 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { PrivateService } from 'src/common/decorators/permissions.decorator';
 import { UserJWT } from 'src/common/interfaces/jwt.interface';
-import { ApiConsumes, ApiOperation, ApiProduces, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger';
+import {
+  ApiConsumes,
+  ApiProduces,
+  ApiResponse,
+  ApiTags,
+  ApiBody,
+} from '@nestjs/swagger';
+import { ApiDocValidateUser } from './docs/validate.swagger.decorator';
+import { User } from 'src/user/entities/user.entity';
+import { validateUserDto } from './dto/validate.dto';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -18,7 +27,11 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @PrivateService()
-  @HttpCode(HttpStatus.OK)
+  @ApiDocValidateUser(User)
+  @ApiBody({
+    description: 'User login credentials',
+    type: validateUserDto,
+  })
   @Post('validate')
   validate(@Request() req) {
     const user = req.user as UserJWT;
@@ -27,13 +40,12 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Login to obtain a JWT token' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Successfully logged in and received a JWT token',
     schema: {
       example: {
-        access_token: 'your-jwt-token-here',
+        token: 'your-jwt-token-here',
       },
     },
   })
