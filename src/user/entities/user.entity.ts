@@ -58,7 +58,7 @@ export class User {
       name: 'Admin',
     },
   })
-  @ManyToOne(() => Role, role => role.users)
+  @ManyToOne(() => Role, (role) => role.users)
   @JoinColumn({ name: 'role_id' })
   role: Role;
 

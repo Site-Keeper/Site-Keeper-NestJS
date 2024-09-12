@@ -43,11 +43,11 @@ export class Task {
   is_deleted: boolean;
 
   @ApiProperty({ type: () => Routine })
-  @ManyToOne(() => Routine, routine => routine.tasks)
+  @ManyToOne(() => Routine, (routine) => routine.tasks)
   @JoinColumn({ name: 'routine_id' })
   routine: Routine;
 
-  @ApiProperty({ type: () => Topic, example : 1 })
+  @ApiProperty({ type: () => Topic, example: 1 })
   @ManyToOne(() => Topic)
   @JoinColumn({ name: 'topic_id' })
   topic: Topic;

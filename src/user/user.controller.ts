@@ -15,7 +15,7 @@ import {
   PrivateService,
   toTheEntity,
 } from 'src/common/decorators/permissions.decorator';
-import {ApiTags} from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
 import { ApiDocPostUser } from './docs/users.swager.decorators';
 

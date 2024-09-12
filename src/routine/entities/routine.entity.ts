@@ -54,7 +54,7 @@ export class Routine {
   @ApiProperty({
     description: 'User assigned to this routine',
     type: User,
-    example: 1
+    example: 1,
   })
   assignedTo: User;
 
@@ -65,7 +65,7 @@ export class Routine {
   })
   is_deleted: boolean;
 
-  @OneToMany(() => Task, task => task.routine)
+  @OneToMany(() => Task, (task) => task.routine)
   tasks: Task[];
 
   @Column()

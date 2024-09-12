@@ -1,6 +1,5 @@
 import { applyDecorators, HttpStatus, Type } from '@nestjs/common';
 import {
-  ApiBearerAuth,
   ApiExtraModels,
   ApiOkResponse,
   ApiResponse,

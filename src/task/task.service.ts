@@ -36,16 +36,16 @@ export class TaskService {
         routine,
         topic,
         created_by: 1,
-        updated_by: 1
+        updated_by: 1,
       };
       await this.tasksRepository.save(newTask);
 
-      delete newTask.routine
+      delete newTask.routine;
 
       return {
         statusCode: 201,
         message: 'Task created successfully',
-        data: {...newTask, routine: routine.id},
+        data: { ...newTask, routine: routine.id },
       };
     } catch (error) {
       console.error('Error creating the tasks:', error);

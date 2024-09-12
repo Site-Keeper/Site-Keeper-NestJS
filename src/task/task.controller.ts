@@ -10,7 +10,13 @@ import {
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiParam,
+} from '@nestjs/swagger';
 import { Task } from './entities/task.entity';
 import { ApiDocPostTask } from './docs/task.swager.decoratos';
 
@@ -38,7 +44,8 @@ export class TaskController {
           {
             id: 1,
             title: 'Complete project report',
-            description: 'Prepare the final report for the project and submit it by the end of the week.',
+            description:
+              'Prepare the final report for the project and submit it by the end of the week.',
             state: 'PENDING',
             space_id: 1,
             object_id: 42,
@@ -49,7 +56,8 @@ export class TaskController {
           {
             id: 2,
             title: 'Update website',
-            description: 'Implement new features and bug fixes on the company website.',
+            description:
+              'Implement new features and bug fixes on the company website.',
             state: 'IN_PROGRESS',
             space_id: 2,
             object_id: null,
@@ -96,7 +104,8 @@ export class TaskController {
         value: {
           id: 1,
           title: 'Complete project report',
-          description: 'Prepare the final report for the project and submit it by the end of the week.',
+          description:
+            'Prepare the final report for the project and submit it by the end of the week.',
           state: 'PENDING',
           space_id: 1,
           object_id: 42,

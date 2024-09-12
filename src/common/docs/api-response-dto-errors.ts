@@ -4,9 +4,9 @@ export class ApiErrorResponseSwaggerDto {
   @ApiProperty({ example: 400 })
   statusCode: number;
 
-  @ApiProperty({ example: "error description "})
+  @ApiProperty({ example: 'error description ' })
   message: string;
 
-  @ApiProperty({ example: 'Bad Request'})
+  @ApiProperty({ example: 'Bad Request' })
   error: string;
 }

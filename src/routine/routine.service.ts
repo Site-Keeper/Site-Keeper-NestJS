@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Routine } from './entities/routine.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
-import { error } from 'console';
 
 @Injectable()
 export class RoutineService {
@@ -38,7 +37,7 @@ export class RoutineService {
       return {
         statusCode: 201,
         message: 'routine created successfully',
-        data: {...newRoutine, assignedTo: user.id},
+        data: { ...newRoutine, assignedTo: user.id },
       };
     } catch (error) {
       console.error('Error creating the routine:', error);

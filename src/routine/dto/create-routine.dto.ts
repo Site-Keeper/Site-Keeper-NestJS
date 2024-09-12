@@ -1,9 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsBoolean, IsDate, IsNumber, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsDate,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateRoutineDto {
-
   @ApiProperty({
     description: 'The name of the routine',
     example: 'Morning Exercise',
@@ -32,7 +37,7 @@ export class CreateRoutineDto {
   @ApiProperty({
     description: 'The days of the week the routine is scheduled for',
     example: ['Monday', 'Wednesday', 'Friday'],
-    type: [String],  
+    type: [String],
   })
   @IsArray()
   @IsString({ each: true })
