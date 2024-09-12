@@ -67,4 +67,10 @@ export class CreateTaskDto {
   })
   @IsInt()
   topic_id: number;
+
+  @IsInt()
+  created_by: number;
+
+  @IsInt()
+  updated_by: number;
 }

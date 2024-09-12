@@ -12,6 +12,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
 import { Task } from './entities/task.entity';
+import { ApiDocPostTask } from './docs/task.swager.decoratos';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -19,61 +20,7 @@ export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a new task' })
-  @ApiBody({
-    description: 'Task creation details',
-    type: CreateTaskDto,
-    examples: {
-      example1: {
-        summary: 'Example of creating a task',
-        value: {
-          title: 'Complete project report',
-          description: 'Prepare the final report for the project and submit it by the end of the week.',
-          state: 'PENDING',
-          space_id: 1,
-          object_id: 42,
-          is_deleted: false,
-          routine_id: 3,
-          topic_id: 7,
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'Task successfully created',
-    type: Task,
-    example: {
-      example1: {
-        summary: 'Example of a successful task creation response',
-        value: {
-          id: 1,
-          title: 'Complete project report',
-          description: 'Prepare the final report for the project and submit it by the end of the week.',
-          state: 'PENDING',
-          space_id: 1,
-          object_id: 42,
-          is_deleted: false,
-          routine_id: 3,
-          topic_id: 7,
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid input data',
-    example: {
-      example1: {
-        summary: 'Example of a bad request response',
-        value: {
-          statusCode: 400,
-          message: 'Validation failed (string is expected)',
-          error: 'Bad Request',
-        },
-      },
-    },
-  })
+  @ApiDocPostTask(Task)
   async create(@Body() createTaskDto: CreateTaskDto) {
     return this.taskService.create(createTaskDto);
   }
