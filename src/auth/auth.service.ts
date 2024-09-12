@@ -15,31 +15,28 @@ export class AuthService {
     private readonly jwtService: JwtService
   ) {}
 
-  async ValidateUser(doc_number: number, pass: string): Promise<any> {
+  async validateUser(doc_number: number, pass: string): Promise<any> {
     try {
       const user: User = await this.usersService.findOneByDocNumber(doc_number);
 
-      console.log(user);
-
-      if (!user) {
+      if (!user || user.is_deleted) {
         throw new NotFoundException(
           'User not found, Verify your credentials or contact your administrator to register'
         );
       }
-      if (user.is_deleted) {
-        throw new NotFoundException();
-      }
       const isMatch = await bcrypt.compare(pass, user?.password);
       if (!isMatch) {
-        throw new UnauthorizedException();
+        throw new NotFoundException(
+          'User not found, Verify your credentials or contact your administrator to register'
+        );
       }
       if (!user.name || !user.email) {
         throw new UnauthorizedException(
           'Please complete your account information to continue'
         );
       }
-      const { password, ...result } = user;
-      return result;
+      delete user.password;
+      return user;
     } catch (error) {
       throw error;
     }
@@ -47,7 +44,7 @@ export class AuthService {
 
   async login(user: Partial<User>) {
     try {
-      const verifiedUser = await this.ValidateUser(
+      const verifiedUser = await this.validateUser(
         user.doc_number,
         user.password
       );
@@ -55,7 +52,7 @@ export class AuthService {
       const payload = {
         id: verifiedUser.id,
         doc_number: verifiedUser.doc_number,
-        role: verifiedUser.role_id,
+        role: verifiedUser.role,
       };
       return {
         token: this.jwtService.sign(payload),
