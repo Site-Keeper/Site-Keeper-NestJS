@@ -15,40 +15,45 @@ export class TaskService {
     @InjectRepository(Routine)
     private routineRepository: Repository<Routine>,
     @InjectRepository(Topic)
-    private topicRepository: Repository<Topic>,
+    private topicRepository: Repository<Topic>
   ) {}
 
   async create(createTaskDto: CreateTaskDto) {
-    const routine = await this.routineRepository.findOneBy({ id: createTaskDto.routine_id})
-    const topic = await this.topicRepository.findOneBy({ id: createTaskDto.topic_id})
-    const newTask = {
-      title:createTaskDto.title,
-      description:createTaskDto.description,
-      state:createTaskDto.state,
-      space_id:createTaskDto.space_id,
-      object_id:createTaskDto.object_id,
-      is_deleted:createTaskDto.is_deleted,
-      routine,
-      topic,
-      created_by:createTaskDto.created_by,
-      updated_by:createTaskDto.updated_by,
-      created_at:new Date(),
-      updated_at:new Date(),
-    }
     try {
+      const routine = await this.routineRepository.findOneBy({
+        id: createTaskDto.routine_id,
+      });
+      const topic = await this.topicRepository.findOneBy({
+        id: createTaskDto.topic_id,
+      });
+      const newTask = {
+        title: createTaskDto.title,
+        description: createTaskDto.description,
+        state: createTaskDto.state,
+        space_id: createTaskDto.space_id,
+        object_id: createTaskDto.object_id,
+        is_deleted: createTaskDto.is_deleted,
+        routine,
+        topic,
+        created_by: 1,
+        updated_by: 1
+      };
       await this.tasksRepository.save(newTask);
-      return{
-        statusCode : 201,
-        message : 'Task created successfully',
-        data : newTask
-      }
+
+      delete newTask.routine
+
+      return {
+        statusCode: 201,
+        message: 'Task created successfully',
+        data: {...newTask, routine: routine.id},
+      };
     } catch (error) {
-      console.error('Error al crear los tasks:', error);
-      return{
-        statusCode : 500,
-        message : 'Error al crear los tasks',
-        error
-      }
+      console.error('Error creating the tasks:', error);
+      return {
+        statusCode: 500,
+        message: 'Error creating the tasks',
+        error,
+      };
     }
   }
 

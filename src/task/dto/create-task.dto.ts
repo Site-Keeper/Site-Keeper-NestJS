@@ -4,73 +4,60 @@ import { Status } from 'src/enums/status.enum';
 
 export class CreateTaskDto {
   @ApiProperty({
-    description: 'The title of the task.',
+    description: 'The title of the task',
     example: 'Complete project report',
-    type: String,
   })
   @IsString()
   title: string;
 
   @ApiProperty({
-    description: 'A detailed description of the task.',
-    example: 'Prepare the final report for the project and submit it by the end of the week.',
-    type: String,
+    description: 'A detailed description of the task',
+    example: 'Write a comprehensive report on the project’s progress and outcomes.',
   })
   @IsString()
   description: string;
 
   @ApiProperty({
-    description: 'The current state of the task, as defined in the Status enum.',
-    example: Status.PENDING,
+    description: 'The current state of the task',
     enum: Status,
+    example: Status.PENDING,
   })
   @IsEnum(Status)
   state: Status;
 
   @ApiProperty({
-    description: 'The ID of the space to which the task belongs.',
+    description: 'The ID of the space associated with the task',
     example: 1,
-    type: Number,
   })
   @IsInt()
   space_id: number;
 
   @ApiPropertyOptional({
-    description: 'The ID of the object associated with the task (optional).',
-    example: 42,
-    type: Number,
+    description: 'The ID of an optional object related to the task',
+    example: 123,
   })
   @IsOptional()
   @IsInt()
   object_id?: number;
 
   @ApiProperty({
-    description: 'Indicates whether the task is deleted or not.',
+    description: 'Indicates whether the task is deleted',
     example: false,
-    type: Boolean,
   })
   @IsBoolean()
   is_deleted: boolean;
 
   @ApiProperty({
-    description: 'The ID of the routine to which the task is related.',
-    example: 3,
-    type: Number,
+    description: 'The ID of the routine associated with the task',
+    example: 1,
   })
   @IsInt()
   routine_id: number;
 
   @ApiProperty({
-    description: 'The ID of the topic associated with the task.',
-    example: 7,
-    type: Number,
+    description: 'The ID of the topic associated with the task',
+    example: 1,
   })
   @IsInt()
   topic_id: number;
-
-  @IsInt()
-  created_by: number;
-
-  @IsInt()
-  updated_by: number;
 }
