@@ -7,7 +7,6 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
-import { permission } from 'process';
 
 @Injectable()
 export class AuthService {
@@ -36,8 +35,8 @@ export class AuthService {
           'Please complete your account information to continue'
         );
       }
-      const { password, ...result } = user;
-      return result;
+      delete user.password;
+      return user;
     } catch (error) {
       throw error;
     }
@@ -53,7 +52,7 @@ export class AuthService {
       const payload = {
         id: verifiedUser.id,
         doc_number: verifiedUser.doc_number,
-        permissions: verifiedUser.role,
+        role: verifiedUser.role,
       };
       return {
         token: this.jwtService.sign(payload),

@@ -16,7 +16,7 @@ export interface RoleJWT {
 export interface UserJWT {
   id: number;
   doc_number: number;
-  permissions: RoleJWT;
+  role: RoleJWT;
   iat: number;
   exp: number;
 }

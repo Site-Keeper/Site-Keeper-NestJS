@@ -48,12 +48,18 @@ export class UserService {
     }
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findAll() {
+    const users: User[] = await this.userRepository.find();
+    return users.map((user) => {
+      delete user.password;
+      return user;
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
+    delete user.password;
+    return user;
   }
 
   async findOneByDocNumber(doc_number: number) {
@@ -62,8 +68,6 @@ export class UserService {
         where: { doc_number },
         relations: ['role'],
       });
-
-      console.log(user.role);
 
       return user;
     } catch (error) {

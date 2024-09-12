@@ -9,7 +9,6 @@ import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { PermissionJWT, UserJWT } from 'src/common/interfaces/jwt.interface';
 import { Reflector } from '@nestjs/core';
-import { permission } from 'process';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -22,31 +21,46 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
+
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Token is not found');
     }
+
     try {
       const payload: UserJWT = await this.jwtService.verifyAsync(token, {
         secret: this.configService.get<string>('JWT_SECRET'),
       });
 
-      const entity = this.reflector.get<string[]>(
-        'entity',
+      const permissions = this.reflector.get<string[]>(
+        'permissions',
         context.getHandler()
       );
 
-      const userPermissions = payload.permissions;
+      if (permissions) {
+        const entity = this.reflector.get<string[]>(
+          'entity',
+          context.getHandler()
+        );
+        const userPermissions = payload.role.permissions;
 
-      const entityPermissions = userPermissions.find(
-        (permission: PermissionJWT) => {
-          return permission.entity === entity[0];
+        const entityPermissions = userPermissions.find(
+          (permission: PermissionJWT) => {
+            return permission.entity === entity[0];
+          }
+        );
+
+        if (!entityPermissions || !entityPermissions[permissions[0]]) {
+          throw new UnauthorizedException(
+            `The role '${payload.role.name}' does not have permission for (${permissions}) in the entity: ${entity}.`
+          );
         }
-      );
+      }
 
       request['user'] = payload;
-    } catch {
-      throw new UnauthorizedException();
+    } catch (error) {
+      throw new UnauthorizedException(error.message);
     }
+
     return true;
   }
 
