@@ -31,16 +31,46 @@ export class AuthGuard implements CanActivate {
         secret: this.configService.get<string>('JWT_SECRET'),
       });
 
-      const permissions = this.reflector.get<string[]>(
+      let permissions = this.reflector.get<string[]>(
         'permissions',
         context.getHandler()
       );
+      let entity = this.reflector.get<string[]>('entity', context.getHandler());
 
-      if (permissions) {
-        const entity = this.reflector.get<string[]>(
-          'entity',
-          context.getHandler()
-        );
+      if (!permissions && !entity) {
+        permissions = [request.body.permissions];
+        entity = [request.body.entity];
+      }
+
+      if (permissions && entity) {
+        const validEntities = [
+          'routines',
+          'tasks',
+          'reports',
+          'spaces',
+          'objects',
+          'lostObjects',
+          'users',
+        ];
+
+        const validPermissions = [
+          'can_create',
+          'can_update',
+          'can_delete',
+          'can_read',
+        ];
+
+        if (!validPermissions.includes(permissions[0])) {
+          throw new UnauthorizedException(
+            `[${permissions[0]}] is an invalid permission`
+          );
+        }
+
+        if (!validEntities.includes(entity[0])) {
+          throw new UnauthorizedException(
+            `[${entity[0]}] is an invalid entity`
+          );
+        }
         const userPermissions = payload.role.permissions;
 
         const entityPermissions = userPermissions.find(

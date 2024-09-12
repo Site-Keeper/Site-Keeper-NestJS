@@ -15,7 +15,7 @@ export class AuthService {
     private readonly jwtService: JwtService
   ) {}
 
-  async ValidateUser(doc_number: number, pass: string): Promise<any> {
+  async validateUser(doc_number: number, pass: string): Promise<any> {
     try {
       const user: User = await this.usersService.findOneByDocNumber(doc_number);
 
@@ -44,7 +44,7 @@ export class AuthService {
 
   async login(user: Partial<User>) {
     try {
-      const verifiedUser = await this.ValidateUser(
+      const verifiedUser = await this.validateUser(
         user.doc_number,
         user.password
       );
