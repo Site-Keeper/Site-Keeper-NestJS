@@ -35,14 +35,14 @@ export class UserService {
     try {
       await Promise.all(users.map((user) => this.userRepository.save(user)));
       return {
-        message: 'Los usuarios fueron creados correctamente',
+        message: 'users were created correctly',
         data: users,
       };
     } catch (error) {
-      console.error('Error al crear los usuarios:', error);
+      console.error('Error when creating users:', error);
 
       return {
-        message: 'Ocurrió un error al crear los usuarios',
+        message: 'An error occurred when creating users',
         error,
       };
     }

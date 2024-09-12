@@ -15,28 +15,33 @@ import {
   PrivateService,
   toTheEntity,
 } from 'src/common/decorators/permissions.decorator';
+import {ApiTags} from '@nestjs/swagger';
+import { User } from './entities/user.entity';
+import { ApiDocPostUser } from './docs/users.swager.decorators';
 
 @Controller('users')
+@ApiTags('Users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Post()
   @PrivateService()
   @Permissions('can_create')
   @toTheEntity('users')
-  @Post()
-  create(@Body() createUserDto: CreateUserDto, @Request() req) {
+  @ApiDocPostUser(User)
+  async create(@Body() createUserDto: CreateUserDto, @Request() req) {
     return this.userService.create(createUserDto, req.user.id);
   }
 
   @PrivateService()
   @Get()
-  findAll() {
+  async findAll() {
     return this.userService.findAll();
   }
 
   @PrivateService()
   @Get(':id')
-  findByID(@Param('id') id: string) {
+  async findByID(@Param('id') id: string) {
     return this.userService.findOne(+id);
   }
 
@@ -48,7 +53,7 @@ export class UserController {
 
   @PrivateService()
   @Patch(':id')
-  update(@Body('role_id') role_id: string) {
+  async update(@Param('id') id: string, @Body('role_id') role_id: string) {
     return this.userService.update({ role_id: +role_id });
   }
 
@@ -56,7 +61,7 @@ export class UserController {
   @Permissions('can_delete')
   @toTheEntity('users')
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.userService.remove(+id);
   }
 }
