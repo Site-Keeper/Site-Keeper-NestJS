@@ -1,7 +1,7 @@
 import { Seeder } from 'typeorm-extension';
 import { DataSource } from 'typeorm';
-import { User } from '../../user/entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import { User } from 'src/user/entities/user.entity';
 
 export default class CreateUsers implements Seeder {
   public async run(dataSource: DataSource): Promise<void> {

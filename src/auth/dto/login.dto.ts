@@ -1,18 +1,21 @@
-import { IsNumber, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
 export class LoginDto {
-  @IsNumber()
+  @ApiProperty({
+    description: 'The document number of the user. Should be a unique identifier.',
+    example: '123456789',
+    type: String,
+  })
+  @IsString()
   doc_number: string;
 
+  @ApiProperty({
+    description: 'The password of the user. Should be a string.',
+    example: 'password123',
+    type: String,
+  })
   @IsString()
-  // TODO: Pasar estas verificaciones al actualizar contraseña
-  // @MinLength(8, { message: 'Password must be at least 8 characters long' })
-  // @Matches(/(?=.*\d)/, { message: 'Password must contain at least one number' })
-  // @Matches(/(?=.*[a-z])/, {
-  //   message: 'Password must contain at least one lowercase letter',
-  // })
-  // @Matches(/(?=.*[A-Z])/, {
-  //   message: 'Password must contain at least one uppercase letter',
-  // })
   password: string;
 }
+
