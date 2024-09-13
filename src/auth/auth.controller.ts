@@ -33,7 +33,8 @@ export class AuthController {
     type: validateUserDto,
   })
   @Post('validate')
-  validate(@Request() req) {
+  validate(@Request() req, @Body() validateUserDto: validateUserDto) {
+    console.log(validateUserDto);
     const user = req.user as UserJWT;
     return user;
   }

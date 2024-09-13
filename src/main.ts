@@ -16,8 +16,17 @@ async function bootstrap() {
     .setTitle('SiteKeeper')
     .setDescription('')
     .setVersion('1.0')
-    .addTag('Enpoints')
-    .addBearerAuth()
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'access-token'
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
