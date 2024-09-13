@@ -10,16 +10,10 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { PrivateService } from 'src/common/decorators/permissions.decorator';
 import { UserJWT } from 'src/common/interfaces/jwt.interface';
-import {
-  ApiConsumes,
-  ApiProduces,
-  ApiResponse,
-  ApiTags,
-  ApiBody,
-} from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { ApiDocValidateUser } from './docs/validate.swagger.decorator';
 import { User } from 'src/user/entities/user.entity';
-import { validateUserDto } from './dto/validate.dto';
+import { ApiDocLogin } from './docs/auth.swagger.decorator';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -28,10 +22,6 @@ export class AuthController {
 
   @PrivateService()
   @ApiDocValidateUser(User)
-  @ApiBody({
-    description: 'User login credentials',
-    type: validateUserDto,
-  })
   @Post('validate')
   validate(@Request() req) {
     const user = req.user as UserJWT;
@@ -40,25 +30,7 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Successfully logged in and received a JWT token',
-    schema: {
-      example: {
-        token: 'your-jwt-token-here',
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'Invalid credentials',
-  })
-  @ApiBody({
-    description: 'User login credentials',
-    type: LoginDto,
-  })
-  @ApiConsumes('application/json')
-  @ApiProduces('application/json')
+  @ApiDocLogin()
   async signIn(@Body() signInDto: LoginDto) {
     return this.authService.login({
       doc_number: +signInDto.doc_number,

@@ -45,15 +45,17 @@ export class AuthGuard implements CanActivate {
       }
 
       if (permissions && entity) {
-        if (!(Object.values(ValidEntities) as string[]).includes(entity[0])) {
+        if (
+          !(Object.values(ValidPermissions) as string[]).includes(
+            permissions[0]
+          )
+        ) {
           throw new UnauthorizedException(
             `[${permissions[0]}] is an invalid permission`
           );
         }
 
-        if (
-          !(Object.values(ValidPermissions) as string[]).includes(entity[0])
-        ) {
+        if (!(Object.values(ValidEntities) as string[]).includes(entity[0])) {
           throw new UnauthorizedException(
             `[${entity[0]}] is an invalid entity`
           );

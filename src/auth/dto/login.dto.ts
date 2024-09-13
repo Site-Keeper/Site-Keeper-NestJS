@@ -5,7 +5,7 @@ export class LoginDto {
   @ApiProperty({
     description:
       'The document number of the user. Should be a unique identifier.',
-    example: 1234567,
+    example: 123456,
   })
   @IsString()
   doc_number: string;

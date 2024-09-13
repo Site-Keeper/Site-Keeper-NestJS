@@ -1,5 +1,5 @@
 import { Type, applyDecorators } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiBody, ApiOperation } from '@nestjs/swagger';
 import {
   ApiBadRequest,
   ApiCreateResponses,
@@ -13,6 +13,16 @@ export function ApiDocValidateUser<T>(entity: Type<T>) {
       description,
     }),
     ApiCreateResponses(entity),
-    ApiBadRequest()
+    ApiBadRequest(),
+    ApiBody({
+      description: 'Entity and permissions required',
+      schema: {
+        type: 'object',
+        properties: {
+          entity: { type: 'string', example: 'users' },
+          permissions: { type: 'string', example: 'can_update' },
+        },
+      },
+    })
   );
 }
