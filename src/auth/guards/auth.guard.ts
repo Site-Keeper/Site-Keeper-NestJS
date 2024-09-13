@@ -9,9 +9,8 @@ import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { PermissionJWT, UserJWT } from 'src/common/interfaces/jwt.interface';
 import { Reflector } from '@nestjs/core';
-import { plainToClass } from 'class-transformer';
-import { validate } from 'class-validator';
-import { validateUserDto } from '../dto/validate.dto';
+import { ValidEntities } from 'src/enums/entities.enum';
+import { ValidPermissions } from 'src/enums/valid-permissions.enum';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -22,7 +21,7 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest<Request>();
+    const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
@@ -34,7 +33,6 @@ export class AuthGuard implements CanActivate {
         secret: this.configService.get<string>('JWT_SECRET'),
       });
 
-      // Obtener entidad y permisos de metadata o body
       let permissions = this.reflector.get<string[]>(
         'permissions',
         context.getHandler()
@@ -42,20 +40,26 @@ export class AuthGuard implements CanActivate {
       let entity = this.reflector.get<string[]>('entity', context.getHandler());
 
       if (!permissions && !entity) {
-        // Extraer datos del cuerpo de la petición
-        const dto = plainToClass(validateUserDto, request.body);
-        const errors = await validate(dto);
-
-        if (errors.length > 0) {
-          throw new UnauthorizedException(errors);
-        }
-
-        // Asignar valores validados del DTO
-        permissions = [dto.permissions];
-        entity = [dto.entity];
+        permissions = [request.body.permissions];
+        entity = [request.body.entity];
       }
 
       if (permissions && entity) {
+        if (
+          !(Object.values(ValidPermissions) as string[]).includes(
+            permissions[0]
+          )
+        ) {
+          throw new UnauthorizedException(
+            `[${permissions[0]}] is an invalid permission`
+          );
+        }
+
+        if (!(Object.values(ValidEntities) as string[]).includes(entity[0])) {
+          throw new UnauthorizedException(
+            `[${entity[0]}] is an invalid entity`
+          );
+        }
         const userPermissions = payload.role.permissions;
 
         const entityPermissions = userPermissions.find(
