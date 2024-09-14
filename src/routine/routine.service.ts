@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateRoutineDto } from './dto/create-routine.dto';
 import { UpdateRoutineDto } from './dto/update-routine.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Routine } from './entities/routine.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
+import { TaskService } from 'src/task/task.service';
 
 @Injectable()
 export class RoutineService {
@@ -12,7 +13,8 @@ export class RoutineService {
     @InjectRepository(Routine)
     private routineRepository: Repository<Routine>,
     @InjectRepository(User)
-    private userRepository: Repository<User>
+    private userRepository: Repository<User>,
+    private taskService: TaskService,
   ) {}
 
   async create(createRoutineDto: CreateRoutineDto) {
@@ -31,7 +33,7 @@ export class RoutineService {
         updated_by: 1,
       };
       await this.routineRepository.save(newRoutine);
-
+      await this.taskService.create(createRoutineDto.task)
       delete newRoutine.assignedTo;
 
       return {
@@ -49,12 +51,14 @@ export class RoutineService {
     }
   }
 
-  findAll() {
-    return `This action returns all routine`;
+  async findAll() {
+    const routines = await this.routineRepository.find()
+    return { stastusCode : 200, message : "Get all routines", data: routines};
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} routine`;
+  async findOne(id: number) {
+    const routine = await this.routineRepository.findOneBy({ id })
+    return { stastusCode : 200, message : "Get routines by id", data: routine};
   }
 
   async update(id: number, updateRoutineDto: UpdateRoutineDto) {

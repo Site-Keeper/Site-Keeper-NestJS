@@ -44,7 +44,9 @@ export class AuthGuard implements CanActivate {
         entity = [request.body.entity];
       }
 
-      if (permissions && entity) {
+      console.log(permissions,entity)
+
+      if (permissions[0] !== undefined && entity[0] !== undefined) {
         if (
           !(Object.values(ValidPermissions) as string[]).includes(
             permissions[0]

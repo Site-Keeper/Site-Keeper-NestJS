@@ -11,7 +11,7 @@ import { RoutineService } from './routine.service';
 import { CreateRoutineDto } from './dto/create-routine.dto';
 import { UpdateRoutineDto } from './dto/update-routine.dto';
 import { Routine } from './entities/routine.entity';
-import { ApiDocPostRoutine } from './docs/routine.swager.decorators';
+import { ApiDocGelAllRoutine, ApiDocGelByIdRoutine, ApiDocPostRoutine } from './docs/routine.swager.decorators';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Routine')
@@ -26,11 +26,13 @@ export class RoutineController {
   }
 
   @Get()
+  @ApiDocGelAllRoutine(Routine)
   findAll() {
     return this.routineService.findAll();
   }
 
   @Get(':id')
+  @ApiDocGelByIdRoutine(Routine)
   findOne(@Param('id') id: string) {
     return this.routineService.findOne(+id);
   }

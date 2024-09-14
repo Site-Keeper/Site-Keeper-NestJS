@@ -18,7 +18,7 @@ import {
   ApiParam,
 } from '@nestjs/swagger';
 import { Task } from './entities/task.entity';
-import { ApiDocPostTask } from './docs/task.swager.decoratos';
+import { ApiDocGelAllTask, ApiDocGelByIdTask, ApiDocPostTask } from './docs/task.swager.decoratos';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -27,123 +27,18 @@ export class TaskController {
 
   @Post()
   @ApiDocPostTask(Task)
-  async create(@Body() createTaskDto: CreateTaskDto) {
+  async create(@Body() createTaskDto: CreateTaskDto[]) {
     return this.taskService.create(createTaskDto);
   }
 
   @Get()
-  @ApiOperation({ summary: 'Retrieve all tasks' })
-  @ApiResponse({
-    status: 200,
-    description: 'List of all tasks',
-    type: [Task],
-    example: {
-      example1: {
-        summary: 'Example of a successful response with a list of tasks',
-        value: [
-          {
-            id: 1,
-            title: 'Complete project report',
-            description:
-              'Prepare the final report for the project and submit it by the end of the week.',
-            state: 'PENDING',
-            space_id: 1,
-            object_id: 42,
-            is_deleted: false,
-            routine_id: 3,
-            topic_id: 7,
-          },
-          {
-            id: 2,
-            title: 'Update website',
-            description:
-              'Implement new features and bug fixes on the company website.',
-            state: 'IN_PROGRESS',
-            space_id: 2,
-            object_id: null,
-            is_deleted: false,
-            routine_id: 5,
-            topic_id: 8,
-          },
-        ],
-      },
-    },
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Unauthorized',
-    example: {
-      example1: {
-        summary: 'Example of an unauthorized response',
-        value: {
-          statusCode: 401,
-          message: 'Unauthorized',
-          error: 'Unauthorized',
-        },
-      },
-    },
-  })
+  @ApiDocGelAllTask(Task)
   async findAll() {
     return this.taskService.findAll();
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Retrieve a task by ID' })
-  @ApiParam({
-    name: 'id',
-    description: 'ID of the task to retrieve',
-    type: Number,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Task found',
-    type: Task,
-    example: {
-      example1: {
-        summary: 'Example of a successful response for a task retrieval',
-        value: {
-          id: 1,
-          title: 'Complete project report',
-          description:
-            'Prepare the final report for the project and submit it by the end of the week.',
-          state: 'PENDING',
-          space_id: 1,
-          object_id: 42,
-          is_deleted: false,
-          routine_id: 3,
-          topic_id: 7,
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Task not found',
-    example: {
-      example1: {
-        summary: 'Example of a task not found response',
-        value: {
-          statusCode: 404,
-          message: 'Task with ID 1 not found',
-          error: 'Not Found',
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Unauthorized',
-    example: {
-      example1: {
-        summary: 'Example of an unauthorized response',
-        value: {
-          statusCode: 401,
-          message: 'Unauthorized',
-          error: 'Unauthorized',
-        },
-      },
-    },
-  })
+  @ApiDocGelByIdTask(Task)
   async findOne(@Param('id') id: string) {
     return this.taskService.findOne(+id);
   }
