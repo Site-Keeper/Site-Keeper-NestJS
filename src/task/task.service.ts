@@ -19,7 +19,7 @@ export class TaskService {
     private RoutineRepository: Repository<Routine>,
   ) {}
 
-  async create(createTaskDtoArray: CreateTaskDto[]) {/*  */
+  async create(createTaskDtoArray: CreateTaskDto[]) {
     try {
       const InvalidTask : Partial<Task>[] = []
       const tasks: Promise<Partial<Task>>[] = createTaskDtoArray.map(
@@ -42,8 +42,10 @@ export class TaskService {
             created_by: 1,
             updated_by: 1,
           };
+          console.log(routine)
           if (routine.assignedTo.perssonel_type !== topic.name) {
             delete task.routine;
+            console.log('task', task)
             InvalidTask.push(task)
             return
           }

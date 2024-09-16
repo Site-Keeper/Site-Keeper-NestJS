@@ -22,6 +22,7 @@ export class RoutineController {
   @Post()
   @ApiDocPostRoutine(Routine)
   create(@Body() createRoutineDto: CreateRoutineDto) {
+    console.log(createRoutineDto);
     return this.routineService.create(createRoutineDto);
   }
 

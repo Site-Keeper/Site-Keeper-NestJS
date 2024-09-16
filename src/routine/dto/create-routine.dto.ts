@@ -62,5 +62,6 @@ export class CreateRoutineDto {
     description: 'The task associated with this routine',
     type: [CreateTaskDto],
   })
+  @Type(() => CreateTaskDto)
   task: CreateTaskDto[]
 }

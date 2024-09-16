@@ -33,6 +33,7 @@ export class RoutineService {
         updated_by: 1,
       };
       await this.routineRepository.save(newRoutine);
+      console.log(createRoutineDto);
       await this.taskService.create(createRoutineDto.task)
       delete newRoutine.assignedTo;
 
