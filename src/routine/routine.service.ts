@@ -33,14 +33,13 @@ export class RoutineService {
         updated_by: 1,
       };
       await this.routineRepository.save(newRoutine);
-      console.log(createRoutineDto);
-      await this.taskService.create(createRoutineDto.task)
+      const task = await this.taskService.create(createRoutineDto.task)
       delete newRoutine.assignedTo;
 
       return {
         statusCode: 201,
         message: 'routine created successfully',
-        data: { ...newRoutine, assignedTo: user.id },
+        data: { responseRoutine:{...newRoutine, assignedTo: user.id}, responseTask:{task} },
       };
     } catch (error) {
       console.error('Error creating the routine:', error);

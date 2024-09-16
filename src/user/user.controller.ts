@@ -46,9 +46,9 @@ export class UserController {
   }
 
   @PrivateService()
-  @Get(':doc_number')
+  @Get('docnumber/:doc_number')
   findByDocNumber(@Param('doc_number') doc_number: string) {
-    return this.userService.findOne(+doc_number);
+    return this.userService.findOneByDocNumber(+doc_number);
   }
 
   @PrivateService()

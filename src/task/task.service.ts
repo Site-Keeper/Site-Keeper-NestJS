@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Delete, Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './entities/task.entity';
@@ -24,11 +24,12 @@ export class TaskService {
       const InvalidTask : Partial<Task>[] = []
       const tasks: Promise<Partial<Task>>[] = createTaskDtoArray.map(
         async (createTaskDto): Promise<Partial<Task>> => {
-          const routine = await this.RoutineRepository.findOneBy(
-            {id : createTaskDto.routine_id}
-          );
+          const routine = await this.RoutineRepository.findOne({
+            where: { id: createTaskDto.routine_id },
+            relations: ['assignedTo']
+          });
           const topic = await this.topicRepository.findOneBy({
-            id: createTaskDto.topic_id,
+            id: createTaskDto.topic_id
           });
           const task: Partial<Task> = {
             title: createTaskDto.title,
@@ -42,10 +43,9 @@ export class TaskService {
             created_by: 1,
             updated_by: 1,
           };
-          console.log(routine)
           if (routine.assignedTo.perssonel_type !== topic.name) {
             delete task.routine;
-            console.log('task', task)
+            console.log('ssddfsfdsdfsfds')
             InvalidTask.push(task)
             return
           }
@@ -53,15 +53,22 @@ export class TaskService {
         }
       );
       const tasksRes = await Promise.all(tasks);
-      await this.tasksRepository.save(tasksRes);
-      const tasksResponse = tasksRes.map((task) => {
-        delete task.routine;
-        return { ...task, routine: task.routine.id };
-      });
+      if(tasksRes[0]){
+        await this.tasksRepository.save(tasksRes);
+        const tasksResponse = tasksRes.map((task) => {
+          delete task.routine;
+          return { ...task, routine: task.routine.id };
+        });
+        return {
+          statusCode: 201,
+          message: 'Task created successfully',
+          data: {tasksResponse, InvalidTask},
+        };
+      }
       return {
-        statusCode: 201,
-        message: 'Task created successfully',
-        data: {tasksResponse, InvalidTask},
+        statusCode: 400,
+        message: 'invalid request,  type of tasks do not match the type of personnel',
+        data: {InvalidTask},
       };
     } catch (error) {
       console.error('Error creating the tasks:', error);
@@ -84,7 +91,14 @@ export class TaskService {
   }
 
   async update(id: number, UpdateTaskDto: UpdateTaskDto) {
-    return await this.tasksRepository.update(id, UpdateTaskDto);
+    const task = await this.tasksRepository.findOne({ where: { id } });
+    if(UpdateTaskDto.routine_id){
+      const routine = await this.RoutineRepository.findOne({where: { id: UpdateTaskDto.routine_id }})
+      delete UpdateTaskDto.routine_id
+      task.routine = routine
+    }
+    Object.assign(task, UpdateTaskDto);
+    return await this.tasksRepository.save(task);
   }
 
   remove(id: number) {
