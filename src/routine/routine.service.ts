@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Routine } from './entities/routine.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
+import { TaskService } from 'src/task/task.service';
+import { UserJWT } from 'src/common/interfaces/jwt.interface';
 
 @Injectable()
 export class RoutineService {
@@ -12,13 +14,14 @@ export class RoutineService {
     @InjectRepository(Routine)
     private routineRepository: Repository<Routine>,
     @InjectRepository(User)
-    private userRepository: Repository<User>
+    private userRepository: Repository<User>,
+    private taskService: TaskService
   ) {}
 
-  async create(createRoutineDto: CreateRoutineDto) {
+  async create(createRoutineDto: CreateRoutineDto, userReq: UserJWT) {
     try {
-      const user = await this.userRepository.findOneBy({
-        id: createRoutineDto.assigned_to,
+      const user = await this.userRepository.findOne({
+        where: { id: createRoutineDto.assigned_to, is_deleted: false },
       });
       const newRoutine = {
         name: createRoutineDto.name,
@@ -27,17 +30,23 @@ export class RoutineService {
         days: createRoutineDto.days,
         assignedTo: user,
         is_deleted: createRoutineDto.is_deleted,
-        created_by: 1,
-        updated_by: 1,
+        created_by: userReq.id,
+        updated_by: userReq.id,
       };
       await this.routineRepository.save(newRoutine);
-
+      const task = await this.taskService.create(
+        createRoutineDto.task,
+        userReq
+      );
       delete newRoutine.assignedTo;
 
       return {
         statusCode: 201,
         message: 'routine created successfully',
-        data: { ...newRoutine, assignedTo: user.id },
+        data: {
+          responseRoutine: { ...newRoutine, assignedTo: user.id },
+          responseTask: { task },
+        },
       };
     } catch (error) {
       console.error('Error creating the routine:', error);
@@ -49,19 +58,58 @@ export class RoutineService {
     }
   }
 
-  findAll() {
-    return `This action returns all routine`;
+  async findAll() {
+    const routines = await this.routineRepository.find({
+      where: { is_deleted: false },
+    });
+    return { stastusCode: 200, message: 'Get all routines', data: routines };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} routine`;
+  async findOne(id: number) {
+    const routine = await this.routineRepository.findOne({
+      where: { id, is_deleted: false },
+    });
+    return { stastusCode: 200, message: 'Get routines by id', data: routine };
   }
 
-  async update(id: number, updateRoutineDto: UpdateRoutineDto) {
-    return await this.routineRepository.update(id, updateRoutineDto);
+  async update(id: number, updateRoutineDto: UpdateRoutineDto, user: UserJWT) {
+    const routine = await this.routineRepository.findOne({ where: { id } });
+    const updateTask = { ...updateRoutineDto, updated_by: user.id };
+    Object.assign(routine, updateTask);
+    return await this.routineRepository.save(routine);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} routine`;
+  async remove(id: number, user: UserJWT) {
+    try {
+      await this.routineRepository.update(id, {
+        updated_by: user.id,
+        is_deleted: true,
+      });
+      return;
+    } catch (error) {
+      console.error('Error update the routine:', error);
+      return {
+        statusCode: 500,
+        message: 'Error update the routine',
+        error,
+      };
+    }
+  }
+
+  async restore(id: number, user: UserJWT) {
+    try {
+      await this.routineRepository.update(id, {
+        updated_by: user.id,
+        is_deleted: false,
+      });
+      return;
+    } catch (error) {
+      console.error('Error update the routine:', error);
+      return {
+        statusCode: 500,
+        message: 'Error update the routine',
+        error,
+      };
+    }
   }
 }
