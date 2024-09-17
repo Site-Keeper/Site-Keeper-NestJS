@@ -9,7 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // filtro de excepciones
-  app.useGlobalFilters(new HttpExceptionFilter);
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   // pipes
   app.useGlobalPipes(
@@ -20,7 +20,7 @@ async function bootstrap() {
     })
   );
   const corsOptions: CorsOptions = {
-    origin: 'localhost:5173',
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   };
