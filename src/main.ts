@@ -2,9 +2,15 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { HttpExceptionFilter } from './http-exception/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // filtro de excepciones
+  app.useGlobalFilters(new HttpExceptionFilter);
+
+  // pipes
   app.useGlobalPipes(
     new ValidationPipe({
       disableErrorMessages: false,
@@ -12,6 +18,7 @@ async function bootstrap() {
     })
   );
 
+  // swagger
   const config = new DocumentBuilder()
     .setTitle('SiteKeeper')
     .setDescription('')
