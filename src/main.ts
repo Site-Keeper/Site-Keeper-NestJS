@@ -19,11 +19,14 @@ async function bootstrap() {
       transform: true,
     })
   );
+
   const corsOptions: CorsOptions = {
-    origin: '*',
+    origin: 'http://your-frontend-domain.com', // Cambia esto por el dominio de tu front-end
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
+    credentials: false, // Cambia esto si necesitas habilitar cookies o credenciales
   };
+  app.enableCors(corsOptions);
+
   const config = new DocumentBuilder()
     .setTitle('SiteKeeper')
     .setDescription('')
@@ -40,7 +43,6 @@ async function bootstrap() {
       'access-token'
     )
     .build();
-  app.enableCors(corsOptions);
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
