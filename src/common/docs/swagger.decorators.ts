@@ -11,7 +11,7 @@ import { ApiErrorResponseUnauthorizeSwaggerDto } from './api-response-dto-error-
 
 export function ApiCreateResponses<T>(entity: Type<T>) {
   return applyDecorators(
-    ApiExtraModels(ApiResponseSwagerDto),
+    ApiExtraModels(ApiResponseSwagerDto, entity),
     ApiOkResponse({
       status: HttpStatus.CREATED,
       description: `${entity.name} was created`,
@@ -24,6 +24,7 @@ export function ApiCreateResponses<T>(entity: Type<T>) {
             },
           },
         ],
+        example: entity,
       },
     })
   );

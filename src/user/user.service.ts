@@ -17,22 +17,21 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto, userID: number) {
-    const role = await this.roleRepository.findOneBy({
-      id: createUserDto.role_id,
-    });
-
-    const users: Partial<User>[] = createUserDto.doc_numbers.map(
-      (docNumber) => ({
-        doc_number: docNumber,
-        password: bcrypt.hashSync(docNumber.toString(), 10),
-        role: role,
-        perssonel_type: createUserDto.perssonel_type || null,
-        created_by: userID,
-        updated_by: userID,
-      })
-    );
-
     try {
+      const role = await this.roleRepository.findOneBy({
+        id: createUserDto.role_id,
+      });
+
+      const users: Partial<User>[] = createUserDto.doc_numbers.map(
+        (docNumber) => ({
+          doc_number: docNumber,
+          password: bcrypt.hashSync(docNumber.toString(), 10),
+          role: role,
+          perssonel_type: createUserDto.perssonel_type || null,
+          created_by: userID,
+          updated_by: userID,
+        })
+      );
       await Promise.all(users.map((user) => this.userRepository.save(user)));
       return {
         message: 'users were created correctly',

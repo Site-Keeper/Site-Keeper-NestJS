@@ -7,6 +7,7 @@ import {
   IsString,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { CreateTaskDto } from 'src/task/dto/create-task.dto';
 
 export class CreateRoutineDto {
   @ApiProperty({
@@ -56,4 +57,12 @@ export class CreateRoutineDto {
   })
   @IsBoolean()
   is_deleted: boolean;
+
+  @ApiProperty({
+    description: 'The task associated with this routine',
+    type: [CreateTaskDto],
+  })
+  @IsArray()
+  @Type(() => CreateTaskDto)
+  task: CreateTaskDto[];
 }
