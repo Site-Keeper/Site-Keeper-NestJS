@@ -15,7 +15,7 @@ export class AuthService {
     private readonly jwtService: JwtService
   ) {}
 
-  async vali dateUser(doc_number: number, pass: string): Promise<any> {
+  async validateUser(doc_number: number, pass: string): Promise<any> {
     try {
       const user: User = await this.usersService.findOneByDocNumber(doc_number);
 

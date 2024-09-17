@@ -7,58 +7,92 @@ import {
   NotFoundException,
   ForbiddenException,
   UnauthorizedException,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
+  // private readonly logger = new Logger(HttpExceptionFilter.name);
+
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
-    let status;
-    let error;
-    let message;
+    // Manejar el código de estado y los mensajes de error
+    const status =
+      exception instanceof HttpException ? exception.getStatus() : 500;
+    const errorDetails = this.getErrorDetails(exception);
 
-    if (exception instanceof BadRequestException) {
-      status = exception.getStatus();
-      error = 'Bad Request';
-      message = 'Invalid input data';
-    } else if (exception instanceof NotFoundException) {
-      status = exception.getStatus();
-      error = 'Not Found';
-      message = 'Resource not found';
-    } else if (exception instanceof UnauthorizedException) {
-      status = exception.getStatus();
-      error = 'Unauthorized';
-      message = 'Authentication is required';
-    } else if (exception instanceof ForbiddenException) {
-      status = exception.getStatus();
-      error = 'Forbidden';
-      message = 'You do not have permission to access this resource';
-    } else if (exception instanceof HttpException) {
-      // Otras excepciones HTTP no especificadas anteriormente
-      status = exception.getStatus();
-      error = exception.message || 'Error';
-      message = 'An error occurred';
-    } else {
-      // Excepciones no controladas
-      status = 500;
-      error = 'Internal Server Error';
-      message = 'An unexpected error occurred';
-    }
+    // Logging de la excepción
+    // this.logger.error(
+    //   {
+    //     message: errorDetails.message,
+    //     error: errorDetails.error,
+    //     url: request.url,
+    //     method: request.method,
+    //     status: status,
+    //   },
+    //   exception instanceof Error ? exception.stack : undefined
+    // );
 
-    // Construir la respuesta de error sin el campo "timestamp"
+    // Construcción de la respuesta de error
     const errorResponse = {
       statusCode: status,
-      error: error,
-      message: message,
+      error: errorDetails.error,
+      message: errorDetails.message,
       path: request.url,
     };
 
-    // Enviar la respuesta
+    // Envío de la respuesta de error
     response.status(status).json(errorResponse);
+  }
+
+  private getErrorDetails(exception: unknown): {
+    error: string;
+    message: string;
+  } {
+    if (exception instanceof BadRequestException) {
+      return {
+        error:
+          (exception.getResponse() as any)['message'] || 'Invalid input data',
+        message: 'Bad Request',
+      };
+    } else if (exception instanceof NotFoundException) {
+      return {
+        error:
+          (exception.getResponse() as any)['message'] || 'Resource not found',
+        message: 'Not Found',
+      };
+    } else if (exception instanceof UnauthorizedException) {
+      const response = exception.getResponse();
+      const customMessage =
+        typeof response === 'string'
+          ? response
+          : response['message'] || 'Authentication is required to access this resource';
+
+      return {
+        error: customMessage,
+        message: 'Unauthorized',
+      };
+    } else if (exception instanceof ForbiddenException) {
+      return {
+        error:
+          (exception.getResponse() as any)['message'] ||
+          'You do not have permission to access this resource',
+        message: 'Forbidden',
+      };
+    } else if (exception instanceof HttpException) {
+      return {
+        error:
+          (exception.getResponse() as any)['message'] || 'An error occurred',
+        message: 'HTTP Error',
+      };
+    } else {
+      return {
+        error: 'An unexpected error occurred',
+        message: 'Internal Server Error',
+      };
+    }
   }
 }

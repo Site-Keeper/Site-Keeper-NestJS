@@ -8,7 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // filtro de excepciones
-  app.useGlobalFilters(new HttpExceptionFilter)
+  app.useGlobalFilters(new HttpExceptionFilter);
 
   // pipes
   app.useGlobalPipes(
