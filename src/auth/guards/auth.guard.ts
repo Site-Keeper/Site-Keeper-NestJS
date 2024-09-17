@@ -44,7 +44,7 @@ export class AuthGuard implements CanActivate {
         entity = [request.body.entity];
       }
 
-      console.log(permissions,entity)
+      console.log(permissions, entity);
 
       if (permissions[0] !== undefined && entity[0] !== undefined) {
         if (

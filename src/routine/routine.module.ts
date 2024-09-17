@@ -11,8 +11,8 @@ import { Topic } from 'src/entities/topic.entity';
 import { JwtService } from '@nestjs/jwt';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Task,Routine, User, Topic]), TaskModule],
+  imports: [TypeOrmModule.forFeature([Task, Routine, User, Topic]), TaskModule],
   controllers: [RoutineController],
-  providers: [RoutineService, TaskService,JwtService],
+  providers: [RoutineService, TaskService, JwtService],
 })
 export class RoutineModule {}

@@ -12,9 +12,18 @@ import { RoutineService } from './routine.service';
 import { CreateRoutineDto } from './dto/create-routine.dto';
 import { UpdateRoutineDto } from './dto/update-routine.dto';
 import { Routine } from './entities/routine.entity';
-import { ApiDocGelAllRoutine, ApiDocGelByIdRoutine, ApiDocPatchRoutine, ApiDocPostRoutine } from './docs/routine.swager.decorators';
+import {
+  ApiDocGelAllRoutine,
+  ApiDocGelByIdRoutine,
+  ApiDocPatchRoutine,
+  ApiDocPostRoutine,
+} from './docs/routine.swager.decorators';
 import { ApiTags } from '@nestjs/swagger';
-import { Permissions, PrivateService, toTheEntity } from 'src/common/decorators/permissions.decorator';
+import {
+  Permissions,
+  PrivateService,
+  toTheEntity,
+} from 'src/common/decorators/permissions.decorator';
 import { UserJWT } from 'src/common/interfaces/jwt.interface';
 
 @ApiTags('Routine')
@@ -28,8 +37,8 @@ export class RoutineController {
   @Post()
   @ApiDocPostRoutine(Routine)
   create(@Body() createRoutineDto: CreateRoutineDto, @Request() req) {
-    const user : UserJWT = req.user
-    return this.routineService.create(createRoutineDto,user);
+    const user: UserJWT = req.user;
+    return this.routineService.create(createRoutineDto, user);
   }
 
   @PrivateService()
@@ -55,26 +64,30 @@ export class RoutineController {
   @toTheEntity('routines')
   @Patch(':id')
   @ApiDocPatchRoutine(Routine)
-  update(@Param('id') id: string, @Body() updateRoutineDto: UpdateRoutineDto, @Request() req) {
-    const user : UserJWT = req.user
-    return this.routineService.update(+id, updateRoutineDto,user);
+  update(
+    @Param('id') id: string,
+    @Body() updateRoutineDto: UpdateRoutineDto,
+    @Request() req
+  ) {
+    const user: UserJWT = req.user;
+    return this.routineService.update(+id, updateRoutineDto, user);
   }
 
   @PrivateService()
   @Permissions('can_delete')
   @toTheEntity('routines')
   @Delete(':id')
-  remove(@Param('id') id: string,@Request() req) {
-    const user : UserJWT = req.user
-    return this.routineService.remove(+id,user);
+  remove(@Param('id') id: string, @Request() req) {
+    const user: UserJWT = req.user;
+    return this.routineService.remove(+id, user);
   }
 
   @PrivateService()
   @Permissions('can_update')
   @toTheEntity('routines')
   @Patch('restore/:id')
-  restore(@Param('id') id: string,@Request() req) {
-    const user : UserJWT = req.user
-    return this.routineService.restore(+id,user)
+  restore(@Param('id') id: string, @Request() req) {
+    const user: UserJWT = req.user;
+    return this.routineService.restore(+id, user);
   }
 }

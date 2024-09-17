@@ -1,5 +1,5 @@
 import { Type, applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiBody, ApiParam } from '@nestjs/swagger';
+import { ApiOperation, ApiBody } from '@nestjs/swagger';
 import {
   ApiBadRequest,
   ApiCreateResponses,
@@ -7,7 +7,6 @@ import {
   ApiSuccessResponsesArray,
 } from 'src/common/docs/swagger.decorators';
 import { CreateTaskDto } from '../dto/create-task.dto';
-import { UpdateTaskDto } from '../dto/update-task.dto';
 
 export function ApiDocPostTask<T>(entity: Type<T>) {
   const description = 'you can create task ';
@@ -17,7 +16,7 @@ export function ApiDocPostTask<T>(entity: Type<T>) {
       description,
     }),
     ApiBody({
-      type: [CreateTaskDto]
+      type: [CreateTaskDto],
     }),
     ApiCreateResponses(entity),
     ApiBadRequest()
@@ -28,23 +27,22 @@ export function ApiDocGelAllTask<T>(Entity: Type<T>) {
   return applyDecorators(
     ApiOperation({
       summary: '',
-      description: ''
+      description: '',
     }),
     ApiSuccessResponsesArray(Entity),
     ApiBadRequest()
-  )
+  );
 }
-
 
 export function ApiDocGelByIdTask<T>(Entity: Type<T>) {
   return applyDecorators(
     ApiOperation({
       summary: '',
-      description: ''
+      description: '',
     }),
     ApiSuccessResponses(Entity),
     ApiBadRequest()
-  )
+  );
 }
 
 export function ApiDocPatchTask<T>(entity: Type<T>) {
@@ -54,7 +52,7 @@ export function ApiDocPatchTask<T>(entity: Type<T>) {
       description: 'you can create Routine',
     }),
     ApiBody({
-      type: CreateTaskDto
+      type: CreateTaskDto,
     }),
     ApiCreateResponses(entity),
     ApiBadRequest()

@@ -10,17 +10,21 @@ import {
 } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-} from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { Task } from './entities/task.entity';
-import { ApiDocGelAllTask, ApiDocGelByIdTask, ApiDocPatchTask, ApiDocPostTask } from './docs/task.swager.decoratos';
-import { Permissions, PrivateService, toTheEntity } from 'src/common/decorators/permissions.decorator';
+import {
+  ApiDocGelAllTask,
+  ApiDocGelByIdTask,
+  ApiDocPatchTask,
+  ApiDocPostTask,
+} from './docs/task.swager.decoratos';
+import {
+  Permissions,
+  PrivateService,
+  toTheEntity,
+} from 'src/common/decorators/permissions.decorator';
 import { UserJWT } from 'src/common/interfaces/jwt.interface';
+import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -33,8 +37,8 @@ export class TaskController {
   @Post()
   @ApiDocPostTask(Task)
   async create(@Body() createTaskDto: CreateTaskDto[], @Request() req) {
-    const user : UserJWT = req.user
-    return this.taskService.create(createTaskDto,user);
+    const user: UserJWT = req.user;
+    return this.taskService.create(createTaskDto, user);
   }
 
   @PrivateService()
@@ -60,26 +64,30 @@ export class TaskController {
   @toTheEntity('tasks')
   @Patch(':id')
   @ApiDocPatchTask(Task)
-  async update(@Param('id') id: string, @Body() UpdateTaskDto: UpdateTaskDto, @Request() req ) {
-    const user: UserJWT = req.user
-    return this.taskService.update(+id, UpdateTaskDto, user);
+  async update(
+    @Param('id') id: string,
+    @Body() updateTaskDto: UpdateTaskDto,
+    @Request() req
+  ) {
+    const user: UserJWT = req.user;
+    return this.taskService.update(+id, updateTaskDto, user);
   }
 
   @PrivateService()
   @Permissions('can_delete')
   @toTheEntity('tasks')
   @Delete(':id')
-  async remove(@Param('id') id: string,  @Request() req ) {
-    const user: UserJWT = req.user
-    return this.taskService.remove(+id,user);
+  async remove(@Param('id') id: string, @Request() req) {
+    const user: UserJWT = req.user;
+    return this.taskService.remove(+id, user);
   }
 
   @PrivateService()
   @Permissions('can_update')
   @toTheEntity('tasks')
   @Patch('restore/:id')
-  restore(@Param('id') id: string,@Request() req) {
-    const user : UserJWT = req.user
-    return this.taskService.restore(+id,user)
+  restore(@Param('id') id: string, @Request() req) {
+    const user: UserJWT = req.user;
+    return this.taskService.restore(+id, user);
   }
 }

@@ -24,7 +24,7 @@ export function ApiCreateResponses<T>(entity: Type<T>) {
             },
           },
         ],
-        example: entity
+        example: entity,
       },
     })
   );

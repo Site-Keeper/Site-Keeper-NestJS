@@ -6,7 +6,6 @@ import {
   ApiSuccessResponses,
   ApiSuccessResponsesArray,
 } from 'src/common/docs/swagger.decorators';
-import { CreateRoutineDto } from '../dto/create-routine.dto';
 import { UpdateRoutineDto } from '../dto/update-routine.dto';
 
 export function ApiDocPostRoutine<T>(entity: Type<T>) {
@@ -24,23 +23,22 @@ export function ApiDocGelAllRoutine<T>(Entity: Type<T>) {
   return applyDecorators(
     ApiOperation({
       summary: '',
-      description: ''
+      description: '',
     }),
     ApiSuccessResponsesArray(Entity),
     ApiBadRequest()
-  )
+  );
 }
-
 
 export function ApiDocGelByIdRoutine<T>(Entity: Type<T>) {
   return applyDecorators(
     ApiOperation({
       summary: '',
-      description: ''
+      description: '',
     }),
     ApiSuccessResponses(Entity),
     ApiBadRequest()
-  )
+  );
 }
 
 export function ApiDocPatchRoutine<T>(entity: Type<T>) {
@@ -50,7 +48,7 @@ export function ApiDocPatchRoutine<T>(entity: Type<T>) {
       description: 'you can create Routine',
     }),
     ApiBody({
-      type: UpdateRoutineDto
+      type: UpdateRoutineDto,
     }),
     ApiCreateResponses(entity),
     ApiBadRequest()

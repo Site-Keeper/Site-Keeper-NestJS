@@ -131,7 +131,10 @@ export class TaskService {
 
   async remove(id: number, user: UserJWT) {
     try {
-      await this.tasksRepository.update(id, { updated_by : user.id, is_deleted: true });
+      await this.tasksRepository.update(id, {
+        updated_by: user.id,
+        is_deleted: true,
+      });
       return;
     } catch (error) {
       console.error('Error update the task:', error);
@@ -145,12 +148,15 @@ export class TaskService {
 
   async restore(id: number, user: UserJWT) {
     try {
-      if(user.role.name === 'perssonel'){
+      if (user.role.name === 'perssonel') {
         throw new UnauthorizedException(
           'solo puedes actualizar el estado unicamente '
         );
       }
-      await this.tasksRepository.update(id, { updated_by : user.id, is_deleted: false });
+      await this.tasksRepository.update(id, {
+        updated_by: user.id,
+        is_deleted: false,
+      });
       return;
     } catch (error) {
       console.error('Error update the task:', error);

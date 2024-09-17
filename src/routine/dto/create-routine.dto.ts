@@ -4,7 +4,7 @@ import {
   IsBoolean,
   IsDate,
   IsNumber,
-  IsString
+  IsString,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateTaskDto } from 'src/task/dto/create-task.dto';
@@ -64,5 +64,5 @@ export class CreateRoutineDto {
   })
   @IsArray()
   @Type(() => CreateTaskDto)
-  task: CreateTaskDto[]
+  task: CreateTaskDto[];
 }
