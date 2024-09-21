@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './entities/task.entity';
@@ -7,19 +7,27 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { Routine } from 'src/routine/entities/routine.entity';
 import { UserJWT } from 'src/common/interfaces/jwt.interface';
 import { Topic } from 'src/topic/entities/topic.entity';
+import axios, { AxiosRequestConfig } from 'axios';
 
 @Injectable()
 export class TaskService {
+  private readonly javaServiceUrl = 'https://site-keeper-springboot.onrender.com/api/spaces'
   constructor(
     @InjectRepository(Task)
     private tasksRepository: Repository<Task>,
     @InjectRepository(Topic)
     private topicRepository: Repository<Topic>,
     @InjectRepository(Routine)
-    private RoutineRepository: Repository<Routine>
+    private RoutineRepository: Repository<Routine>,
   ) { }
 
-  async create(createTaskDtoArray: CreateTaskDto[], user: UserJWT) {
+  async create(createTaskDtoArray: CreateTaskDto[], user: UserJWT, token: string) {
+    const config: AxiosRequestConfig = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    };
     try {
       const InvalidTask: Partial<Task>[] = [];
       const tasks: Promise<Partial<Task>>[] = createTaskDtoArray.map(
@@ -28,6 +36,11 @@ export class TaskService {
             where: { id: createTaskDto.routine_id, is_deleted: false },
             relations: ['assignedTo'],
           });
+          console.log(createTaskDto.space_id);
+          const spaces = await axios.get(`${this.javaServiceUrl}`, config);
+          if (spaces.data.some((space) => space.id === createTaskDto.space_id) === false) {
+            throw new BadRequestException('space not found');
+          }
           const topic = await this.topicRepository.findOneBy({
             id: createTaskDto.topic_id,
           });
@@ -95,12 +108,31 @@ export class TaskService {
     return { stastusCode: 200, message: 'Get Task by id', data: task };
   }
 
-  async findByRoutine(routine_id: number) {
+  async findByRoutine(routine_id: number, token: string) {
+    const config: AxiosRequestConfig = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    };
     try {
       const task = await this.tasksRepository.find({
         where: { routine: { id: routine_id }, is_deleted: false },
+        relations: ['topic'],
       });
-      return task;
+      const spacesResponse = await axios.get(`${this.javaServiceUrl}`, config);
+    const spaces = spacesResponse.data;
+
+    // 3. Combinar las tareas con los espacios
+    const tasksWithSpaces = task.map(task => {
+      const space = spaces.find((space: any) => space.id === task.space_id);
+      delete task.space_id;
+      return {
+        ...task,
+        spaceName: space ? space.name : 'Nombre no encontrado', // Si encuentra el espacio, guarda el nombre, si no, guarda un mensaje.
+      };
+    });
+      return tasksWithSpaces;
     }catch (error) {
       console.error('Error getting tasks by routine:', error);
       return error;

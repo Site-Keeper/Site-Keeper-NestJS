@@ -38,7 +38,8 @@ export class TaskController {
   @ApiDocPostTask(Task)
   async create(@Body() createTaskDto: CreateTaskDto[], @Request() req) {
     const user: UserJWT = req.user;
-    return this.taskService.create(createTaskDto, user);
+    const token: string = req.headers.authorization;
+    return this.taskService.create(createTaskDto, user, token);
   }
 
   @PrivateService()
@@ -64,8 +65,9 @@ export class TaskController {
   @toTheEntity('tasks')
   @Get('Byroutine/:routine_id')
   @ApiDocGelByIdTask(Task)
-  async findByRoutine(@Param('routine_id') routine_id: number) {
-    return this.taskService.findByRoutine(routine_id);
+  async findByRoutine(@Param('routine_id') routine_id: number, @Request() req) {
+    const token: string = req.headers.authorization;
+    return this.taskService.findByRoutine(routine_id, token);
   }
 
   @PrivateService()

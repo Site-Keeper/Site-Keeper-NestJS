@@ -18,7 +18,7 @@ export class RoutineService {
     private taskService: TaskService
   ) {}
 
-  async create(createRoutineDto: CreateRoutineDto, userReq: UserJWT) {
+  async create(createRoutineDto: CreateRoutineDto, userReq: UserJWT, token: string) {
     try {
       const user = await this.userRepository.findOne({
         where: { id: createRoutineDto.assigned_to, is_deleted: false },
@@ -36,7 +36,7 @@ export class RoutineService {
       await this.routineRepository.save(newRoutine);
       const task = await this.taskService.create(
         createRoutineDto.task,
-        userReq
+        userReq, token
       );
       delete newRoutine.assignedTo;
 
@@ -85,12 +85,18 @@ export class RoutineService {
     return await this.routineRepository.save(routine);
   }
 
-  async remove(id: number, user: UserJWT) {
+  async remove(id: number, user: UserJWT, token: string) {
     try {
       await this.routineRepository.update(id, {
         updated_by: user.id,
         is_deleted: true,
       });
+
+      const task = await this.taskService.findByRoutine(id, token);
+      console.log(task);
+      task.map((task) => {
+        return this.taskService.remove(task.id, user);
+      })
       return;
     } catch (error) {
       console.error('Error update the routine:', error);

@@ -39,7 +39,8 @@ export class RoutineController {
   @ApiDocPostRoutine(Routine)
   create(@Body() createRoutineDto: CreateRoutineDto, @Request() req) {
     const user: UserJWT = req.user;
-    return this.routineService.create(createRoutineDto, user);
+    const token: string = req.headers.authorization;
+    return this.routineService.create(createRoutineDto, user,token);
   }
 
   @PrivateService()
@@ -81,7 +82,8 @@ export class RoutineController {
   @Delete(':id')
   remove(@Param('id') id: string, @Request() req) {
     const user: UserJWT = req.user;
-    return this.routineService.remove(+id, user);
+    const token: string = req.headers.authorization;
+    return this.routineService.remove(+id, user, token);
   }
 
   @PrivateService()
