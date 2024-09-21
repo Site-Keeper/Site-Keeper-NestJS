@@ -60,6 +60,15 @@ export class TaskController {
   }
 
   @PrivateService()
+  @Permissions('can_read')
+  @toTheEntity('tasks')
+  @Get('Byroutine/:routine_id')
+  @ApiDocGelByIdTask(Task)
+  async findByRoutine(@Param('routine_id') routine_id: number) {
+    return this.taskService.findByRoutine(routine_id);
+  }
+
+  @PrivateService()
   @Permissions('can_update')
   @toTheEntity('tasks')
   @Patch(':id')
