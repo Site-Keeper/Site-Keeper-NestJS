@@ -13,6 +13,7 @@ import { CreateRoutineDto } from './dto/create-routine.dto';
 import { UpdateRoutineDto } from './dto/update-routine.dto';
 import { Routine } from './entities/routine.entity';
 import {
+  ApiDocDeleteRoutine,
   ApiDocGelAllRoutine,
   ApiDocGelByIdRoutine,
   ApiDocPatchRoutine,
@@ -76,6 +77,7 @@ export class RoutineController {
   @PrivateService()
   @Permissions('can_delete')
   @toTheEntity('routines')
+  @ApiDocDeleteRoutine(Routine)
   @Delete(':id')
   remove(@Param('id') id: string, @Request() req) {
     const user: UserJWT = req.user;

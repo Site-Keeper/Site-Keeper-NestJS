@@ -7,6 +7,7 @@ import { DatabaseModule } from './database.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { TopicModule } from './topic/topic.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
     RoutineModule,
     AuthModule,
     DatabaseModule,
+    TopicModule,
   ],
   providers: [
     {
