@@ -36,7 +36,7 @@ export class TaskService {
             where: { id: createTaskDto.routine_id, is_deleted: false },
             relations: ['assignedTo'],
           });
-          console.log(createTaskDto.space_id);
+          console.log(routine);
           const spaces = await axios.get(`${this.javaServiceUrl}`, config);
           if (spaces.data.some((space) => space.id === createTaskDto.space_id) === false) {
             throw new BadRequestException('space not found');
@@ -56,7 +56,10 @@ export class TaskService {
             created_by: user.id,
             updated_by: user.id,
           };
-          if (routine.assignedTo.perssonel_type !== topic.name) {
+          console.log(routine.assignedTo.perssonel_type, topic.name);
+          const personnelType = routine.assignedTo.perssonel_type.trim().toLowerCase();
+          const topicName = topic.name.trim().toLowerCase();
+          if (personnelType !== topicName) {
             delete task.routine;
             console.log('ssddfsfdsdfsfds');
             InvalidTask.push(task);
@@ -69,8 +72,9 @@ export class TaskService {
       if (tasksRes[0]) {
         await this.tasksRepository.save(tasksRes);
         const tasksResponse = tasksRes.map((task) => {
+          const newTask = { ...task, routine: task.routine.id };
           delete task.routine;
-          return { ...task, routine: task.routine.id };
+          return newTask;
         });
         return {
           statusCode: 201,
