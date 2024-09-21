@@ -17,7 +17,7 @@ export class TaskService {
     private topicRepository: Repository<Topic>,
     @InjectRepository(Routine)
     private RoutineRepository: Repository<Routine>
-  ) {}
+  ) { }
 
   async create(createTaskDtoArray: CreateTaskDto[], user: UserJWT) {
     try {
@@ -93,6 +93,18 @@ export class TaskService {
       where: { id, is_deleted: false },
     });
     return { stastusCode: 200, message: 'Get Task by id', data: task };
+  }
+
+  async findByRoutine(routine_id: number) {
+    try {
+      const task = await this.tasksRepository.find({
+        where: { routine: { id: routine_id }, is_deleted: false },
+      });
+      return task;
+    }catch (error) {
+      console.error('Error getting tasks by routine:', error);
+      return error;
+    }
   }
 
   async update(id: number, UpdateTaskDto: UpdateTaskDto, user: UserJWT) {
