@@ -61,8 +61,15 @@ export class RoutineService {
   async findAll() {
     const routines = await this.routineRepository.find({
       where: { is_deleted: false },
+      relations: ['assignedTo']
     });
-    return { stastusCode: 200, message: 'Get all routines', data: routines };
+    const routineRespos = routines.map((routine) => {
+      const name = routine.assignedTo.name
+      delete routine.assignedTo
+      return({...routine, assignedTo: name})
+    })
+    console.log(routineRespos, ';')
+    return { data: routineRespos };
   }
 
   async findOne(id: number) {
