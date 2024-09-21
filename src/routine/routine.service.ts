@@ -68,8 +68,7 @@ export class RoutineService {
       delete routine.assignedTo
       return({...routine, assignedTo: name})
     })
-    console.log(routineRespos, ';')
-    return { data: routineRespos };
+    return  routineRespos ;
   }
 
   async findOne(id: number) {
