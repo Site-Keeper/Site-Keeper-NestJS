@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Status } from 'src/common/enums/status.enum';
-import { Topic } from 'src/entities/topic.entity';
 import { Routine } from 'src/routine/entities/routine.entity';
+import { Topic } from 'src/topic/entities/topic.entity';
 import {
   Column,
   CreateDateColumn,

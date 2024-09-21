@@ -54,3 +54,15 @@ export function ApiDocPatchRoutine<T>(entity: Type<T>) {
     ApiBadRequest()
   );
 }
+
+
+export function ApiDocDeleteRoutine<T>(entity: Type<T>) {
+  return applyDecorators(
+    ApiOperation({
+      summary: 'Delete Routine ',
+      description: 'you can Delete Routine',
+    }),
+    ApiCreateResponses(entity),
+    ApiBadRequest()
+  );
+}
