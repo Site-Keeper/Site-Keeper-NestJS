@@ -55,6 +55,15 @@ export class RoutineController {
   @PrivateService()
   @Permissions('can_read')
   @toTheEntity('routines')
+  @Get('ByUsers/:id')
+  @ApiDocGelAllRoutine(Routine)
+  findByUser(@Param('id') id: string) {
+    return this.routineService.findByUser(+id);
+  }
+
+  @PrivateService()
+  @Permissions('can_read')
+  @toTheEntity('routines')
   @Get(':id')
   @ApiDocGelByIdRoutine(Routine)
   findOne(@Param('id') id: string) {
