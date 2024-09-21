@@ -18,7 +18,7 @@ export class RoutineService {
     private taskService: TaskService
   ) {}
 
-  async create(createRoutineDto: CreateRoutineDto, userReq: UserJWT) {
+  async create(createRoutineDto: CreateRoutineDto, userReq: UserJWT, token: string) {
     try {
       const user = await this.userRepository.findOne({
         where: { id: createRoutineDto.assigned_to, is_deleted: false },
@@ -36,7 +36,7 @@ export class RoutineService {
       await this.routineRepository.save(newRoutine);
       const task = await this.taskService.create(
         createRoutineDto.task,
-        userReq
+        userReq, token
       );
       delete newRoutine.assignedTo;
 
@@ -71,6 +71,23 @@ export class RoutineService {
     return  routineRespos ;
   }
 
+  async findByUser(id: number) {
+    try{
+      const routines = await this.routineRepository.find({
+        where: { is_deleted: false, assignedTo: { id } },
+        relations: ['assignedTo']
+      });
+      const routineRespos = routines.map((routine) => {
+        const name = routine.assignedTo.name
+        delete routine.assignedTo
+        return({...routine, assignedTo: name})
+      })
+      return  routineRespos ;
+    } catch (error) {
+      return error
+    }
+  }
+
   async findOne(id: number) {
     const routine = await this.routineRepository.findOne({
       where: { id, is_deleted: false },
@@ -85,12 +102,18 @@ export class RoutineService {
     return await this.routineRepository.save(routine);
   }
 
-  async remove(id: number, user: UserJWT) {
+  async remove(id: number, user: UserJWT, token: string) {
     try {
       await this.routineRepository.update(id, {
         updated_by: user.id,
         is_deleted: true,
       });
+
+      const task = await this.taskService.findByRoutine(id, token);
+      console.log(task);
+      task.map((task) => {
+        return this.taskService.remove(task.id, user);
+      })
       return;
     } catch (error) {
       console.error('Error update the routine:', error);
