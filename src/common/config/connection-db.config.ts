@@ -3,9 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { Permission } from 'src/entities/permission.entity';
 import { Role } from 'src/entities/role.entity';
-import { Topic } from 'src/entities/topic.entity';
 import { Routine } from 'src/routine/entities/routine.entity';
 import { Task } from 'src/task/entities/task.entity';
+import { Topic } from 'src/topic/entities/topic.entity';
 import { User } from 'src/user/entities/user.entity';
 
 @Injectable()

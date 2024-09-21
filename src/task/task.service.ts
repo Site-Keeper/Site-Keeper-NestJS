@@ -4,9 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './entities/task.entity';
 import { Repository } from 'typeorm';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { Topic } from 'src/entities/topic.entity';
 import { Routine } from 'src/routine/entities/routine.entity';
 import { UserJWT } from 'src/common/interfaces/jwt.interface';
+import { Topic } from 'src/topic/entities/topic.entity';
 
 @Injectable()
 export class TaskService {

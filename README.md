@@ -1,6 +1,6 @@
 # Task Manager API
 
-Una API para gestionar tareas, diseñada utilizando NestJS y TypeORM con una base de datos PostgreSQL. Esta aplicación permite a los usuarios crear, leer, actualizar y eliminar tareas, así como gestionar roles y permisos.
+Una API para gestionar tareas, diseñada utilizando NestJS y TypeORM con una base de datos PostgreSQL. Esta aplicación permite a los usuarios crear, leer, actualizar y eliminar tareas, así como gestionar roles y  permisos.
 
 ## Características
 
