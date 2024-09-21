@@ -33,13 +33,15 @@ export class RoutineService {
         created_by: userReq.id,
         updated_by: userReq.id,
       };
-      await this.routineRepository.save(newRoutine);
+      const routine = await this.routineRepository.save(newRoutine);
+      const tasks = createRoutineDto.task.map((task) => {
+        return { ...task, routine_id: routine.id };
+      })
       const task = await this.taskService.create(
-        createRoutineDto.task,
+        tasks,
         userReq, token
       );
       delete newRoutine.assignedTo;
-
       return {
         statusCode: 201,
         message: 'routine created successfully',
@@ -71,9 +73,27 @@ export class RoutineService {
     return  routineRespos ;
   }
 
+  async findByUser(id: number) {
+    try{
+      const routines = await this.routineRepository.find({
+        where: { is_deleted: false, assignedTo: { id } },
+        relations: ['assignedTo']
+      });
+      const routineRespos = routines.map((routine) => {
+        const name = routine.assignedTo.name
+        delete routine.assignedTo
+        return({...routine, assignedTo: name})
+      })
+      return  routineRespos ;
+    } catch (error) {
+      return error
+    }
+  }
+
   async findOne(id: number) {
     const routine = await this.routineRepository.findOne({
       where: { id, is_deleted: false },
+      relations: ['assignedTo'],
     });
     return { stastusCode: 200, message: 'Get routines by id', data: routine };
   }
