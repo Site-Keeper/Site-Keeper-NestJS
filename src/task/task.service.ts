@@ -105,6 +105,21 @@ export class TaskService {
     return { stastusCode: 200, message: 'Get all Tasks', data: tasks };
   }
 
+  async findStatistics() {
+    try{
+      const tasks = await this.tasksRepository.find({
+        where: { is_deleted: false },
+      });
+      const tasksCompleted = tasks.filter(task => task.state === 'COMPLETED');
+      const tasksCancelled = tasks.filter(task => task.state === 'CANCELLED');
+
+      return { total : tasks.length, completed: tasksCompleted.length, cancelled: tasksCancelled.length }
+    } catch (error) {
+      console.error('Error creating the tasks:', error);
+      return {error};
+    }
+  }
+
   async findOne(id: number) {
     const task = await this.tasksRepository.findOne({
       where: { id, is_deleted: false },

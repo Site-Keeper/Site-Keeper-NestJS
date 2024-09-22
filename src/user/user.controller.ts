@@ -47,6 +47,15 @@ export class UserController {
   }
 
   @PrivateService()
+  @Role(['admin'])
+  @Permissions('can_read')
+  @toTheEntity('users')
+  @Get("statistics")
+  async findStatisticsUser() {
+    return this.userService.userStatistics();
+  }
+
+  @PrivateService()
   @Permissions('can_read')
   @toTheEntity('users')
   @Get(':id')
