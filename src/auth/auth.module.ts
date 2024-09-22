@@ -9,11 +9,18 @@ import { UserService } from 'src/user/user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Role } from 'src/entities/role.entity';
+import { Topic } from 'src/topic/entities/topic.entity';
+import { Task } from 'src/task/entities/task.entity';
+import { Routine } from 'src/routine/entities/routine.entity';
+import { RoutineModule } from 'src/routine/routine.module';
+import { TaskModule } from 'src/task/task.module';
+import { RoutineService } from 'src/routine/routine.service';
+import { TaskService } from 'src/task/task.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Role]),
-    UserModule,
+    TypeOrmModule.forFeature([User, Role, Routine, Task, Topic]),
+    UserModule, RoutineModule, TaskModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -25,6 +32,6 @@ import { Role } from 'src/entities/role.entity';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserService],
+  providers: [AuthService, UserService, RoutineService, TaskService],
 })
 export class AuthModule {}
