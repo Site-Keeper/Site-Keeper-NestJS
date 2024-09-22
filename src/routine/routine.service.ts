@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateRoutineDto } from './dto/create-routine.dto';
 import { UpdateRoutineDto } from './dto/update-routine.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,7 +18,11 @@ export class RoutineService {
     private taskService: TaskService
   ) {}
 
-  async create(createRoutineDto: CreateRoutineDto, userReq: UserJWT, token: string) {
+  async create(
+    createRoutineDto: CreateRoutineDto,
+    userReq: UserJWT,
+    token: string
+  ) {
     try {
       const user = await this.userRepository.findOne({
         where: { id: createRoutineDto.assigned_to, is_deleted: false },
@@ -36,11 +40,8 @@ export class RoutineService {
       const routine = await this.routineRepository.save(newRoutine);
       const tasks = createRoutineDto.task.map((task) => {
         return { ...task, routine_id: routine.id };
-      })
-      const task = await this.taskService.create(
-        tasks,
-        userReq, token
-      );
+      });
+      const task = await this.taskService.create(tasks, userReq, token);
       delete newRoutine.assignedTo;
       return {
         statusCode: 201,
@@ -63,30 +64,30 @@ export class RoutineService {
   async findAll() {
     const routines = await this.routineRepository.find({
       where: { is_deleted: false },
-      relations: ['assignedTo']
+      relations: ['assignedTo'],
     });
     const routineRespos = routines.map((routine) => {
-      const name = routine.assignedTo.name
-      delete routine.assignedTo
-      return({...routine, assignedTo: name})
-    })
-    return  routineRespos ;
+      const name = routine.assignedTo.name;
+      delete routine.assignedTo;
+      return { ...routine, assignedTo: name };
+    });
+    return routineRespos;
   }
 
   async findByUser(id: number) {
-    try{
+    try {
       const routines = await this.routineRepository.find({
         where: { is_deleted: false, assignedTo: { id } },
-        relations: ['assignedTo']
+        relations: ['assignedTo'],
       });
       const routineRespos = routines.map((routine) => {
-        const name = routine.assignedTo.name
-        delete routine.assignedTo
-        return({...routine, assignedTo: name})
-      })
-      return  routineRespos ;
+        const name = routine.assignedTo.name;
+        delete routine.assignedTo;
+        return { ...routine, assignedTo: name };
+      });
+      return routineRespos;
     } catch (error) {
-      return error
+      return error;
     }
   }
 
@@ -116,15 +117,11 @@ export class RoutineService {
       console.log(task);
       task.map((task) => {
         return this.taskService.remove(task.id, user);
-      })
+      });
       return;
     } catch (error) {
       console.error('Error update the routine:', error);
-      return {
-        statusCode: 500,
-        message: 'Error update the routine',
-        error,
-      };
+      throw new InternalServerErrorException('Error updating the routine');
     }
   }
 
@@ -137,11 +134,7 @@ export class RoutineService {
       return;
     } catch (error) {
       console.error('Error update the routine:', error);
-      return {
-        statusCode: 500,
-        message: 'Error update the routine',
-        error,
-      };
+      throw new InternalServerErrorException('Error update the routine');
     }
   }
 }

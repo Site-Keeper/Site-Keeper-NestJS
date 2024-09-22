@@ -9,13 +9,14 @@ export default class CreateRoles implements Seeder {
     const rolesData = [
       { name: 'admin' },
       { name: 'perssonel' },
-      { name: 'client' },
+      { name: 'employed' },
     ];
 
     for (const role of rolesData) {
       const roleExists = await roleRepository.findOneBy({ name: role.name });
 
       if (!roleExists) {
+        console.log('añadiendo role: ', role.name);
         const newRole = roleRepository.create(role);
         await roleRepository.save(newRole);
       }

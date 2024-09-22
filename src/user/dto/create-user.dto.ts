@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, Max, Min } from 'class-validator';
 import { perssonelType } from 'src/enums/perssonel-type.enum';
 
 export class CreateUserDto {
@@ -16,6 +16,8 @@ export class CreateUserDto {
     example: 1,
   })
   @IsNumber()
+  @Min(1)
+  @Max(3)
   role_id: number;
 
   @ApiPropertyOptional({

@@ -54,6 +54,15 @@ export class TaskController {
   @PrivateService()
   @Permissions('can_read')
   @toTheEntity('tasks')
+  @Get("statistics")
+  @ApiDocGelAllTask(Task)
+  async findStatistics() {
+    return this.taskService.findStatistics();
+  }
+
+  @PrivateService()
+  @Permissions('can_read')
+  @toTheEntity('tasks')
   @Get(':id')
   @ApiDocGelByIdTask(Task)
   async findOne(@Param('id') id: string) {

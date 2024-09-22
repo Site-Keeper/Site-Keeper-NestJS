@@ -38,13 +38,22 @@ export class AuthGuard implements CanActivate {
         context.getHandler()
       );
       let entity = this.reflector.get<string[]>('entity', context.getHandler());
+      let role = this.reflector.get<string[]>('role', context.getHandler());
 
       if (!permissions && !entity) {
         permissions = [request.body.permissions];
         entity = [request.body.entity];
       }
 
-      console.log(permissions, entity);
+      if (!role) {
+        role = request.body.role;
+      }
+
+      if (role !== undefined && !role.includes(payload.role.name)) {
+        throw new UnauthorizedException(
+          `The role '${payload.role.name}' does not have permissions of (${role}).`
+        );
+      }
 
       if (permissions[0] !== undefined && entity[0] !== undefined) {
         if (
@@ -79,6 +88,7 @@ export class AuthGuard implements CanActivate {
 
       request['user'] = payload;
     } catch (error) {
+      console.log(error);
       throw new UnauthorizedException(error.message);
     }
 

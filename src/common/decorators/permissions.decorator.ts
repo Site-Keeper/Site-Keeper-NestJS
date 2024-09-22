@@ -11,3 +11,5 @@ export const Permissions = (...permissions: string[]) =>
 
 export const toTheEntity = (...entity: string[]) =>
   SetMetadata('entity', entity);
+
+export const Role = (role: string[]) => SetMetadata('role', role);
