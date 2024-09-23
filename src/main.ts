@@ -26,7 +26,10 @@ async function bootstrap() {
     credentials: true, // Habilita el uso de cookies o credenciales
   };
 
-  const allowedOrigins = ['http://localhost:5173', 'http://otro-origen.com'];
+  const allowedOrigins = [
+    'http://localhost:5173',
+    'https://musical-lolly-355227.netlify.app',
+  ];
 
   app.use((req, res, next) => {
     const origin = req.headers.origin;
