@@ -20,6 +20,12 @@ async function bootstrap() {
     })
   );
 
+  const corsOptions: CorsOptions = {
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  };
+
   const allowedOrigins = [
     'http://localhost:5173',
     'https://musical-lolly-355227.netlify.app',
@@ -42,6 +48,8 @@ async function bootstrap() {
     );
     next();
   });
+
+  app.enableCors(corsOptions);
 
   const config = new DocumentBuilder()
     .setTitle('SiteKeeper')
