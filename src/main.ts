@@ -29,7 +29,7 @@ async function bootstrap() {
   const allowedOrigins = [
     'http://localhost:5173',
     'https://musical-lolly-355227.netlify.app',
-    'https://site-keeper-react.vercel.app/'
+    'https://site-keeper-react.vercel.app',
   ];
 
   app.use((req, res, next) => {
