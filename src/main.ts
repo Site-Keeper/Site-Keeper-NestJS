@@ -21,7 +21,7 @@ async function bootstrap() {
   );
 
   const corsOptions: CorsOptions = {
-    origin: 'https://site-keeper-react.vercel.app/', // Cambia esto por el dominio de tu front-end
+    origin: 'https://site-keeper-react.vercel.app', // Cambia esto por el dominio de tu front-end
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // Habilita el uso de cookies o credenciales
   };
