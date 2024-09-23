@@ -21,7 +21,7 @@ async function bootstrap() {
   );
 
   const corsOptions: CorsOptions = {
-    origin: 'http://localhost:5173', // Cambia esto por el dominio de tu front-end
+    origin: 'https://site-keeper-react.vercel.app/', // Cambia esto por el dominio de tu front-end
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // Habilita el uso de cookies o credenciales
   };
@@ -29,6 +29,7 @@ async function bootstrap() {
   const allowedOrigins = [
     'http://localhost:5173',
     'https://musical-lolly-355227.netlify.app',
+    'https://site-keeper-react.vercel.app/'
   ];
 
   app.use((req, res, next) => {
