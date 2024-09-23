@@ -46,6 +46,15 @@ export class RoutineController {
   @PrivateService()
   @Permissions('can_read')
   @toTheEntity('routines')
+  @Get('today')
+  async getRoutinesForToday(@Request() req) {
+    const user: UserJWT = req.user;
+    return this.routineService.findRoutinesForToday(user);
+  }
+
+  @PrivateService()
+  @Permissions('can_read')
+  @toTheEntity('routines')
   @Get()
   @ApiDocGelAllRoutine(Routine)
   findAll() {

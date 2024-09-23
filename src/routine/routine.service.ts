@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { TaskService } from 'src/task/task.service';
 import { UserJWT } from 'src/common/interfaces/jwt.interface';
+import { format, getDay } from 'date-fns';
 
 @Injectable()
 export class RoutineService {
@@ -91,12 +92,67 @@ export class RoutineService {
     }
   }
 
+  async findRoutinesForToday(user: UserJWT) {
+    try {
+      // Obtener la fecha actual en formato ISO (YYYY-MM-DD)
+      const currentDate = new Date();
+      const dateISO = format(currentDate, 'yyyy-MM-dd');
+
+      // Obtener el día de la semana en minúsculas (0: domingo, 1: lunes, ..., 6: sábado)
+      const dayOfWeekNumber = getDay(currentDate); // getDay devuelve 0 para domingo
+      const daysOfWeek = [
+        'sunday',
+        'monday',
+        'tuesday',
+        'wednesday',
+        'thursday',
+        'friday',
+        'saturday',
+      ];
+      const dayOfWeek = daysOfWeek[dayOfWeekNumber];
+
+      // Construir la consulta
+      const routines = await this.routineRepository
+        .createQueryBuilder('routine')
+        .leftJoinAndSelect('routine.assignedTo', 'user')
+        .where('routine.is_deleted = :isDeleted', { isDeleted: false })
+        .andWhere('user.id = :userId', { userId: user.id })
+        .andWhere(':dayOfWeek = ANY (routine.days)', { dayOfWeek })
+        .andWhere('routine.start_time <= :date AND routine.end_time >= :date', {
+          date: dateISO,
+        })
+        .getMany();
+
+      // Formatear la respuesta
+      const routineResponses = routines.map((routine) => {
+        const assignedToName = routine.assignedTo.name;
+        delete routine.assignedTo;
+        return { ...routine, assignedTo: assignedToName };
+      });
+
+      return {
+        statusCode: 200,
+        message: `Rutinas para el usuario ${user.id} en la fecha ${dateISO} obtenidas correctamente`,
+        data: routineResponses,
+      };
+    } catch (error) {
+      console.error('Error al obtener rutinas para hoy:', error);
+      throw new InternalServerErrorException(
+        'Error al obtener rutinas para hoy'
+      );
+    }
+  }
+
   async findOne(id: number) {
-    const routine = await this.routineRepository.findOne({
-      where: { id, is_deleted: false },
-      relations: ['assignedTo'],
-    });
-    return { stastusCode: 200, message: 'Get routines by id', data: routine };
+    try {
+      const routine = await this.routineRepository.findOne({
+        where: { id, is_deleted: false },
+        relations: ['assignedTo'],
+      });
+      return routine;
+    } catch (error) {
+      return error;
+    }
   }
 
   async update(id: number, updateRoutineDto: UpdateRoutineDto, user: UserJWT) {
