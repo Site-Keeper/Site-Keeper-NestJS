@@ -21,22 +21,12 @@ async function bootstrap() {
   );
 
   const corsOptions: CorsOptions = {
-    origin: 'http://localhost:5173',
+    origin: true, // Permite todos los orígenes
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
+    credentials: true, // Permite el uso de cookies o credenciales
   };
 
-  const allowedOrigins = [
-    'http://localhost:5173',
-    'https://musical-lolly-355227.netlify.app',
-    'https://site-keeper-react.vercel.app',
-  ];
-
   app.use((req, res, next) => {
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-      res.header('Access-Control-Allow-Origin', origin);
-    }
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header(
       'Access-Control-Allow-Methods',
@@ -49,6 +39,7 @@ async function bootstrap() {
     next();
   });
 
+  // Habilita CORS con las opciones configuradas
   app.enableCors(corsOptions);
 
   const config = new DocumentBuilder()
