@@ -39,8 +39,7 @@ export class RoutineController {
   @ApiDocPostRoutine(Routine)
   create(@Body() createRoutineDto: CreateRoutineDto, @Request() req) {
     const user: UserJWT = req.user;
-    const token: string = req.headers.authorization;
-    return this.routineService.create(createRoutineDto, user, token);
+    return this.routineService.create(createRoutineDto, user);
   }
 
   @PrivateService()
