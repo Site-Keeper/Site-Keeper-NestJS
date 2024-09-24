@@ -8,7 +8,7 @@ export default class CreateRoles implements Seeder {
 
     const rolesData = [
       { name: 'admin' },
-      { name: 'perssonel' },
+      { name: 'personnel' },
       { name: 'employed' },
     ];
 

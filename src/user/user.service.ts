@@ -66,7 +66,7 @@ export class UserService {
             doc_number: docNumber,
             password: bcrypt.hashSync(docNumber.toString(), 10),
             role: role,
-            perssonel_type: createUserDto.perssonel_type || null,
+            personnel_type: createUserDto.personnel_type || null,
             created_by: userID,
             updated_by: userID,
           };
@@ -146,10 +146,10 @@ export class UserService {
         relations: ['role'],
       })
       const usersAdmin = users.filter(user => user.role.name === 'admin')
-      const usersPerssonel = users.filter(user => user.role.name === 'perssonel')
+      const usersPersonnel = users.filter(user => user.role.name === 'personnel')
       const usersEmployed = users.filter(user => user.role.name === 'employed')
 
-      return { total : users.length, admin: usersAdmin.length, perssonel: usersPerssonel.length, employed: usersEmployed.length }
+      return { total : users.length, admin: usersAdmin.length, personnel: usersPersonnel.length, employed: usersEmployed.length }
     } catch(error) {
       throw new InternalServerErrorException(
         'Error al crear o actualizar usuarios.'
