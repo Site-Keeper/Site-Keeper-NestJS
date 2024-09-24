@@ -15,6 +15,7 @@ import { Role } from 'src/entities/role.entity';
 import { UserJWT } from 'src/common/interfaces/jwt.interface';
 import { RoutineService } from 'src/routine/routine.service';
 import { Routine } from 'src/routine/entities/routine.entity';
+import { personnelType } from 'src/enums/personnel-type.enum';
 
 @Injectable()
 export class UserService {
@@ -91,24 +92,44 @@ export class UserService {
     }
   }
 
-  async findAll() {
+  async findAll(type?: string, role?: number) {
+    interface IWhere {
+      is_deleted: boolean;
+      personnel_type?: personnelType;
+      role?: { id: number };
+    }
+    const where: IWhere = { is_deleted: false };
+
+    if (type) {
+      if (!Object.values(personnelType).includes(type as personnelType)) {
+        throw new BadRequestException(`Tipo de personal invalido: ${type}`);
+      }
+      where.personnel_type = type as personnelType;
+    }
+
+    if (role) {
+      if (!Number.isInteger(role)) {
+        throw new BadRequestException(`Role debe ser un número: ${role}`);
+      }
+      where.role = { id: role };
+    }
+
     const users: User[] = await this.userRepository.find({
       relations: ['role'],
       order: {
         id: 'ASC',
       },
+      where: where,
     });
 
-    return users.filter((user) => {
-      if (!user.is_deleted) {
-        delete user.password;
-        delete user.updated_at;
-        delete user.updated_by;
-        delete user.role.permissions;
-        delete user.created_at;
-        delete user.created_by;
-        return user;
-      }
+    return users.map((user) => {
+      delete user.password;
+      delete user.updated_at;
+      delete user.updated_by;
+      delete user.role.permissions;
+      delete user.created_at;
+      delete user.created_by;
+      return user;
     });
   }
 

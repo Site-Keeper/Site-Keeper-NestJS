@@ -90,6 +90,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         message: 'HTTP Error',
       };
     } else {
+      console.log(exception);
       return {
         error: 'An unexpected error occurred',
         message: 'Internal Server Error',

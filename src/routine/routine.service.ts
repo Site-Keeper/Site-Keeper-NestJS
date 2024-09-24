@@ -33,7 +33,7 @@ export class RoutineService {
         end_time: createRoutineDto.end_time,
         days: createRoutineDto.days,
         assigned_to: user,
-        is_deleted: createRoutineDto.is_deleted,
+        is_deleted: false,
         created_by: userReq.id,
         updated_by: userReq.id,
       };
