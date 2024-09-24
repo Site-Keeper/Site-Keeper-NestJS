@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './entities/task.entity';
@@ -11,21 +15,26 @@ import axios, { AxiosRequestConfig } from 'axios';
 
 @Injectable()
 export class TaskService {
-  private readonly javaServiceUrl = 'https://site-keeper-springboot.onrender.com/api/spaces'
+  private readonly javaServiceUrl =
+    'https://site-keeper-springboot.onrender.com/api/spaces';
   constructor(
     @InjectRepository(Task)
     private tasksRepository: Repository<Task>,
     @InjectRepository(Topic)
     private topicRepository: Repository<Topic>,
     @InjectRepository(Routine)
-    private RoutineRepository: Repository<Routine>,
-  ) { }
+    private RoutineRepository: Repository<Routine>
+  ) {}
 
-  async create(createTaskDtoArray: CreateTaskDto[], user: UserJWT, token: string) {
+  async create(
+    createTaskDtoArray: CreateTaskDto[],
+    user: UserJWT,
+    token: string
+  ) {
     const config: AxiosRequestConfig = {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     };
     try {
@@ -34,11 +43,14 @@ export class TaskService {
         async (createTaskDto): Promise<Partial<Task>> => {
           const routine = await this.RoutineRepository.findOne({
             where: { id: createTaskDto.routine_id, is_deleted: false },
-            relations: ['assignedTo'],
+            relations: ['assigned_to'],
           });
           console.log(routine);
           const spaces = await axios.get(`${this.javaServiceUrl}`, config);
-          if (spaces.data.some((space) => space.id === createTaskDto.space_id) === false) {
+          if (
+            spaces.data.some((space) => space.id === createTaskDto.space_id) ===
+            false
+          ) {
             throw new BadRequestException('space not found');
           }
           const topic = await this.topicRepository.findOneBy({
@@ -56,12 +68,13 @@ export class TaskService {
             created_by: user.id,
             updated_by: user.id,
           };
-          console.log(routine.assignedTo.perssonel_type, topic.name);
-          const personnelType = routine.assignedTo.perssonel_type.trim().toLowerCase();
+          console.log(routine.assigned_to.personnel_type, topic.name);
+          const personnelType = routine.assigned_to.personnel_type
+            .trim()
+            .toLowerCase();
           const topicName = topic.name.trim().toLowerCase();
           if (personnelType !== topicName) {
             delete task.routine;
-            console.log('ssddfsfdsdfsfds');
             InvalidTask.push(task);
             return;
           }
@@ -99,39 +112,51 @@ export class TaskService {
   }
 
   async findAll() {
-    const tasks = await this.tasksRepository.find({
-      where: { is_deleted: false },
-    });
-    return { stastusCode: 200, message: 'Get all Tasks', data: tasks };
-  }
-
-  async findStatistics() {
-    try{
+    try {
       const tasks = await this.tasksRepository.find({
         where: { is_deleted: false },
       });
-      const tasksCompleted = tasks.filter(task => task.state === 'COMPLETED');
-      const tasksCancelled = tasks.filter(task => task.state === 'CANCELLED');
+      return tasks;
+    } catch (error) {
+      return error;
+    }
+  }
 
-      return { total : tasks.length, completed: tasksCompleted.length, cancelled: tasksCancelled.length }
+  async findStatistics() {
+    try {
+      const tasks = await this.tasksRepository.find({
+        where: { is_deleted: false },
+      });
+      const tasksCompleted = tasks.filter((task) => task.state === 'COMPLETED');
+      const tasksCancelled = tasks.filter((task) => task.state === 'CANCELLED');
+
+      return {
+        total: tasks.length,
+        completed: tasksCompleted.length,
+        cancelled: tasksCancelled.length,
+      };
     } catch (error) {
       console.error('Error creating the tasks:', error);
-      return {error};
+      return { error };
     }
   }
 
   async findOne(id: number) {
-    const task = await this.tasksRepository.findOne({
-      where: { id, is_deleted: false },
-    });
-    return { stastusCode: 200, message: 'Get Task by id', data: task };
+    try {
+      const task = await this.tasksRepository.findOne({
+        where: { id, is_deleted: false },
+      });
+      return task;
+    } catch (error) {
+      return error;
+    }
   }
 
   async findByRoutine(routine_id: number, token: string) {
     const config: AxiosRequestConfig = {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     };
     try {
@@ -140,19 +165,19 @@ export class TaskService {
         relations: ['topic'],
       });
       const spacesResponse = await axios.get(`${this.javaServiceUrl}`, config);
-    const spaces = spacesResponse.data;
+      const spaces = spacesResponse.data;
 
-    // 3. Combinar las tareas con los espacios
-    const tasksWithSpaces = task.map(task => {
-      const space = spaces.find((space: any) => space.id === task.space_id);
-      delete task.space_id;
-      return {
-        ...task,
-        spaceName: space ? space.name : 'Nombre no encontrado', // Si encuentra el espacio, guarda el nombre, si no, guarda un mensaje.
-      };
-    });
+      // 3. Combinar las tareas con los espacios
+      const tasksWithSpaces = task.map((task) => {
+        const space = spaces.find((space: any) => space.id === task.space_id);
+        delete task.space_id;
+        return {
+          ...task,
+          spaceName: space ? space.name : 'Nombre no encontrado', // Si encuentra el espacio, guarda el nombre, si no, guarda un mensaje.
+        };
+      });
       return tasksWithSpaces;
-    }catch (error) {
+    } catch (error) {
       console.error('Error getting tasks by routine:', error);
       return error;
     }
@@ -160,7 +185,7 @@ export class TaskService {
 
   async update(id: number, UpdateTaskDto: UpdateTaskDto, user: UserJWT) {
     try {
-      if (user.role.name === 'perssonel') {
+      if (user.role.name === 'personnel') {
         if (Object.keys(UpdateTaskDto).length > 1) {
           throw new UnauthorizedException(
             'solo puedes actualizar el estado unicamente '
@@ -211,7 +236,7 @@ export class TaskService {
 
   async restore(id: number, user: UserJWT) {
     try {
-      if (user.role.name === 'perssonel') {
+      if (user.role.name === 'personnel') {
         throw new UnauthorizedException(
           'solo puedes actualizar el estado unicamente '
         );

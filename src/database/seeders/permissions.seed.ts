@@ -9,7 +9,7 @@ export default class CreatePermissions implements Seeder {
     const roleRepository = dataSource.getRepository(Role);
 
     const adminRole = await roleRepository.findOne({ where: { id: 1 } });
-    const perssonelRole = await roleRepository.findOne({ where: { id: 2 } });
+    const personnelRole = await roleRepository.findOne({ where: { id: 2 } });
     const clientRole = await roleRepository.findOne({ where: { id: 3 } });
 
     const permissionsData = [
@@ -28,7 +28,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: false,
         can_delete: false,
-        role: perssonelRole,
+        role: personnelRole,
       },
       {
         entity: 'routines',
@@ -54,7 +54,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: true,
         can_delete: false,
-        role: perssonelRole,
+        role: personnelRole,
       },
       {
         entity: 'tasks',
@@ -80,7 +80,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: true,
         can_delete: false,
-        role: perssonelRole,
+        role: personnelRole,
       },
       {
         entity: 'reports',
@@ -106,7 +106,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: false,
         can_delete: false,
-        role: perssonelRole,
+        role: personnelRole,
       },
       {
         entity: 'spaces',
@@ -132,7 +132,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: false,
         can_delete: false,
-        role: perssonelRole,
+        role: personnelRole,
       },
       {
         entity: 'objects',
@@ -158,7 +158,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: true,
         can_delete: false,
-        role: perssonelRole,
+        role: personnelRole,
       },
       {
         entity: 'lostObjects',
@@ -184,7 +184,7 @@ export default class CreatePermissions implements Seeder {
         can_read: true,
         can_update: true,
         can_delete: false,
-        role: perssonelRole,
+        role: personnelRole,
       },
       {
         entity: 'users',

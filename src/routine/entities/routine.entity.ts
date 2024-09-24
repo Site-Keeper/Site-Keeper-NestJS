@@ -49,14 +49,16 @@ export class Routine {
   })
   days: string[];
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, {
+    eager: true,
+  })
   @JoinColumn({ name: 'assigned_to' })
   @ApiProperty({
     description: 'User assigned to this routine',
     type: User,
     example: 1,
   })
-  assignedTo: User;
+  assigned_to: User;
 
   @Column()
   @ApiProperty({
