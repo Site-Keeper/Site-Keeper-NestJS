@@ -49,7 +49,7 @@ export class RoutineController {
   @Get('today')
   async getRoutinesForToday(@Request() req) {
     const user: UserJWT = req.user;
-    return this.routineService.findRoutinesForToday(user);
+    return this.routineService.findRoutinesForToday(user.id);
   }
 
   @PrivateService()

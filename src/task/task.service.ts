@@ -43,7 +43,7 @@ export class TaskService {
         async (createTaskDto): Promise<Partial<Task>> => {
           const routine = await this.RoutineRepository.findOne({
             where: { id: createTaskDto.routine_id, is_deleted: false },
-            relations: ['assignedTo'],
+            relations: ['assigned_to'],
           });
           console.log(routine);
           const spaces = await axios.get(`${this.javaServiceUrl}`, config);
@@ -68,8 +68,8 @@ export class TaskService {
             created_by: user.id,
             updated_by: user.id,
           };
-          console.log(routine.assignedTo.perssonel_type, topic.name);
-          const personnelType = routine.assignedTo.perssonel_type
+          console.log(routine.assigned_to.perssonel_type, topic.name);
+          const personnelType = routine.assigned_to.perssonel_type
             .trim()
             .toLowerCase();
           const topicName = topic.name.trim().toLowerCase();

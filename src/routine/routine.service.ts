@@ -33,7 +33,7 @@ export class RoutineService {
         start_time: createRoutineDto.start_time,
         end_time: createRoutineDto.end_time,
         days: createRoutineDto.days,
-        assignedTo: user,
+        assigned_to: user,
         is_deleted: createRoutineDto.is_deleted,
         created_by: userReq.id,
         updated_by: userReq.id,
@@ -43,12 +43,12 @@ export class RoutineService {
         return { ...task, routine_id: routine.id };
       });
       const task = await this.taskService.create(tasks, userReq, token);
-      delete newRoutine.assignedTo;
+      delete newRoutine.assigned_to;
       return {
         statusCode: 201,
         message: 'routine created successfully',
         data: {
-          responseRoutine: { ...newRoutine, assignedTo: user.id },
+          responseRoutine: { ...newRoutine, assigned_to: user.id },
           responseTask: { task },
         },
       };
@@ -63,28 +63,34 @@ export class RoutineService {
   }
 
   async findAll() {
-    const routines = await this.routineRepository.find({
-      where: { is_deleted: false },
-      relations: ['assignedTo'],
-    });
-    const routineRespos = routines.map((routine) => {
-      const name = routine.assignedTo.name;
-      delete routine.assignedTo;
-      return { ...routine, assignedTo: name };
-    });
-    return routineRespos;
+    try{
+      const routines = await this.routineRepository.find({
+        where: { is_deleted: false },
+        relations: { assigned_to: true},
+      });
+      const routineRespos = routines.map((routine) => {
+        const name = routine.assigned_to.name;
+        console.log(name)
+        delete routine.assigned_to;
+        return { ...routine, assigned_to: name };
+      });
+      return routineRespos;
+    } catch (error){
+      console.error(error)
+      return error
+    }
   }
 
   async findByUser(id: number) {
     try {
       const routines = await this.routineRepository.find({
-        where: { is_deleted: false, assignedTo: { id } },
-        relations: ['assignedTo'],
+        where: { is_deleted: false, assigned_to: { id } },
+        relations: ['assigned_to'],
       });
       const routineRespos = routines.map((routine) => {
-        const name = routine.assignedTo.name;
-        delete routine.assignedTo;
-        return { ...routine, assignedTo: name };
+        const name = routine.assigned_to.name;
+        delete routine.assigned_to;
+        return { ...routine, assigned_to: name };
       });
       return routineRespos;
     } catch (error) {
@@ -92,49 +98,16 @@ export class RoutineService {
     }
   }
 
-  async findRoutinesForToday(user: UserJWT) {
+  async findRoutinesForToday(id: number) {
     try {
-      // Obtener la fecha actual en formato ISO (YYYY-MM-DD)
-      const currentDate = new Date();
-      const dateISO = format(currentDate, 'yyyy-MM-dd');
-
-      // Obtener el día de la semana en minúsculas (0: domingo, 1: lunes, ..., 6: sábado)
-      const dayOfWeekNumber = getDay(currentDate); // getDay devuelve 0 para domingo
-      const daysOfWeek = [
-        'sunday',
-        'monday',
-        'tuesday',
-        'wednesday',
-        'thursday',
-        'friday',
-        'saturday',
-      ];
-      const dayOfWeek = daysOfWeek[dayOfWeekNumber];
-
-      // Construir la consulta
-      const routines = await this.routineRepository
-        .createQueryBuilder('routine')
-        .leftJoinAndSelect('routine.assignedTo', 'user')
-        .where('routine.is_deleted = :isDeleted', { isDeleted: false })
-        .andWhere('user.id = :userId', { userId: user.id })
-        .andWhere(':dayOfWeek = ANY (routine.days)', { dayOfWeek })
-        .andWhere('routine.start_time <= :date AND routine.end_time >= :date', {
-          date: dateISO,
-        })
-        .getMany();
-
-      // Formatear la respuesta
-      const routineResponses = routines.map((routine) => {
-        const assignedToName = routine.assignedTo.name;
-        delete routine.assignedTo;
-        return { ...routine, assignedTo: assignedToName };
-      });
-
-      return {
-        statusCode: 200,
-        message: `Rutinas para el usuario ${user.id} en la fecha ${dateISO} obtenidas correctamente`,
-        data: routineResponses,
-      };
+      const today = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(new Date());
+      const routines = await this.routineRepository.find({
+        where: { is_deleted: false, assigned_to: { id } },
+        relations: ['assigned_to'],
+      }); 
+      console.log(routines, id)
+      const todayRoutines = routines.find(routine => routine.days.includes(today));
+      return {todayRoutines};
     } catch (error) {
       console.error('Error al obtener rutinas para hoy:', error);
       throw new InternalServerErrorException(
@@ -147,7 +120,7 @@ export class RoutineService {
     try {
       const routine = await this.routineRepository.findOne({
         where: { id, is_deleted: false },
-        relations: ['assignedTo'],
+        relations: ['assigned_to'],
       });
       return routine;
     } catch (error) {
