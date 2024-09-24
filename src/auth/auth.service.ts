@@ -1,7 +1,7 @@
 import {
   Injectable,
   NotFoundException,
-  UnauthorizedException,
+  // UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/entities/user.entity';
@@ -30,11 +30,11 @@ export class AuthService {
           'User not found, Verify your credentials or contact your administrator to register'
         );
       }
-      if (!user.name || !user.email) {
-        throw new UnauthorizedException(
-          'Please complete your account information to continue'
-        );
-      }
+      // if (!user.name || !user.email) {
+      //   throw new UnauthorizedException(
+      //     'Please complete your account information to continue'
+      //   );
+      // }
       delete user.password;
       return user;
     } catch (error) {

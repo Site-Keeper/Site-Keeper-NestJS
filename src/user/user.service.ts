@@ -140,22 +140,30 @@ export class UserService {
     }
   }
 
-  async userStatistics(){
-    try{
+  async userStatistics() {
+    try {
       const users: User[] = await this.userRepository.find({
         relations: ['role'],
-      })
-      const usersAdmin = users.filter(user => user.role.name === 'admin')
-      const usersPersonnel = users.filter(user => user.role.name === 'personnel')
-      const usersEmployed = users.filter(user => user.role.name === 'employed')
+      });
+      const usersAdmin = users.filter((user) => user.role.name === 'admin');
+      const usersPerssonel = users.filter(
+        (user) => user.role.name === 'perssonel'
+      );
+      const usersEmployed = users.filter(
+        (user) => user.role.name === 'employed'
+      );
 
-      return { total : users.length, admin: usersAdmin.length, personnel: usersPersonnel.length, employed: usersEmployed.length }
-    } catch(error) {
+      return {
+        total: users.length,
+        admin: usersAdmin.length,
+        perssonel: usersPerssonel.length,
+        employed: usersEmployed.length,
+      };
+    } catch (error) {
       throw new InternalServerErrorException(
         'Error al crear o actualizar usuarios.'
       );
     }
-
   }
 
   async update(id: number, updateUserDto: UpdateUserDto, userJWT: UserJWT) {
