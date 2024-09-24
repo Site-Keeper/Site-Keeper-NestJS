@@ -57,12 +57,4 @@ export class CreateRoutineDto {
   })
   @IsBoolean()
   is_deleted: boolean;
-
-  @ApiProperty({
-    description: 'The task associated with this routine',
-    type: [CreateTaskDto],
-  })
-  @IsArray()
-  @Type(() => CreateTaskDto)
-  task: CreateTaskDto[];
 }
