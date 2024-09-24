@@ -7,6 +7,7 @@ import {
   Delete,
   Body,
   Request,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -16,7 +17,7 @@ import {
   Role,
   toTheEntity,
 } from 'src/common/decorators/permissions.decorator';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
 import { ApiDocPostUser } from './docs/users.swager.decorators';
 import { UserJWT } from 'src/common/interfaces/jwt.interface';
@@ -42,8 +43,10 @@ export class UserController {
   @Permissions('can_read')
   @toTheEntity('users')
   @Get()
-  async findAll() {
-    return this.userService.findAll();
+  @ApiQuery({ name: 'type', required: false })
+  @ApiQuery({ name: 'role', required: false })
+  async findAll(@Query('type') type?: string, @Query('role') role?: string) {
+    return this.userService.findAll(type, +role);
   }
 
   @PrivateService()

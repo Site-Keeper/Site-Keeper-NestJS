@@ -1,13 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsArray,
-  IsBoolean,
-  IsDate,
-  IsNumber,
-  IsString,
-} from 'class-validator';
+import { IsArray, IsDate, IsNumber, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { CreateTaskDto } from 'src/task/dto/create-task.dto';
 
 export class CreateRoutineDto {
   @ApiProperty({
@@ -50,11 +43,4 @@ export class CreateRoutineDto {
   })
   @IsNumber()
   assigned_to: number;
-
-  @ApiProperty({
-    description: 'Indicates whether the routine is deleted',
-    example: false,
-  })
-  @IsBoolean()
-  is_deleted: boolean;
 }
