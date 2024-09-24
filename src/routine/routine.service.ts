@@ -113,7 +113,6 @@ export class RoutineService {
         where: { is_deleted: false, assigned_to: { id } },
         relations: ['assigned_to'],
       });
-      console.log(routines, id);
       const todayRoutines = routines.find((routine) => {
         return routine.days.includes(today);
       });

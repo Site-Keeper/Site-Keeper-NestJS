@@ -20,7 +20,9 @@ import { TaskService } from 'src/task/task.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, Role, Routine, Task, Topic]),
-    UserModule, RoutineModule, TaskModule,
+    UserModule,
+    RoutineModule,
+    TaskModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],

@@ -1,6 +1,10 @@
-import { Type, applyDecorators } from "@nestjs/common";
-import { ApiOperation } from "@nestjs/swagger";
-import { ApiBadRequest, ApiSuccessResponses, ApiSuccessResponsesArray } from "src/common/docs/swagger.decorators";
+import { Type, applyDecorators } from '@nestjs/common';
+import { ApiOperation } from '@nestjs/swagger';
+import {
+  ApiBadRequest,
+  ApiSuccessResponses,
+  ApiSuccessResponsesArray,
+} from 'src/common/docs/swagger.decorators';
 
 export function ApiDocGelAllTopic<T>(Entity: Type<T>) {
   return applyDecorators(

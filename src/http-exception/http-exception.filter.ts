@@ -69,7 +69,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
       const customMessage =
         typeof response === 'string'
           ? response
-          : response['message'] || 'Authentication is required to access this resource';
+          : response['message'] ||
+            'Authentication is required to access this resource';
 
       return {
         error: customMessage,
