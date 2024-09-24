@@ -1,12 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from 'src/entities/role.entity';
 import { perssonelType } from 'src/enums/perssonel-type.enum';
+import { Routine } from 'src/routine/entities/routine.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -105,4 +107,9 @@ export class User {
   })
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
+
+  @OneToMany(() => Routine, (routine) =>  routine.assigned_to, {
+  })
+  routines: Routine[];
+
 }
