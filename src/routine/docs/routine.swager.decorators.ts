@@ -55,7 +55,6 @@ export function ApiDocPatchRoutine<T>(entity: Type<T>) {
   );
 }
 
-
 export function ApiDocDeleteRoutine<T>(entity: Type<T>) {
   return applyDecorators(
     ApiOperation({

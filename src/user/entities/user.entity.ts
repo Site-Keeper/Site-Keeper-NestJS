@@ -108,8 +108,6 @@ export class User {
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
 
-  @OneToMany(() => Routine, (routine) =>  routine.assigned_to, {
-  })
+  @OneToMany(() => Routine, (routine) => routine.assigned_to, {})
   routines: Routine[];
-
 }

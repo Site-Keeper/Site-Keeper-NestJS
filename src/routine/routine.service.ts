@@ -7,7 +7,6 @@ import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { TaskService } from 'src/task/task.service';
 import { UserJWT } from 'src/common/interfaces/jwt.interface';
-import { format, getDay } from 'date-fns';
 
 @Injectable()
 export class RoutineService {
@@ -63,21 +62,21 @@ export class RoutineService {
   }
 
   async findAll() {
-    try{
+    try {
       const routines = await this.routineRepository.find({
         where: { is_deleted: false },
-        relations: { assigned_to: true},
+        relations: { assigned_to: true },
       });
       const routineRespos = routines.map((routine) => {
         const name = routine.assigned_to.name;
-        console.log(name)
+        console.log(name);
         delete routine.assigned_to;
         return { ...routine, assigned_to: name };
       });
       return routineRespos;
-    } catch (error){
-      console.error(error)
-      return error
+    } catch (error) {
+      console.error(error);
+      return error;
     }
   }
 
@@ -100,14 +99,18 @@ export class RoutineService {
 
   async findRoutinesForToday(id: number) {
     try {
-      const today = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(new Date());
+      const today = new Intl.DateTimeFormat('en-US', {
+        weekday: 'long',
+      }).format(new Date());
       const routines = await this.routineRepository.find({
         where: { is_deleted: false, assigned_to: { id } },
         relations: ['assigned_to'],
-      }); 
-      console.log(routines, id)
-      const todayRoutines = routines.find(routine => routine.days.includes(today));
-      return {todayRoutines};
+      });
+      console.log(routines, id);
+      const todayRoutines = routines.find((routine) =>
+        routine.days.includes(today)
+      );
+      return { todayRoutines };
     } catch (error) {
       console.error('Error al obtener rutinas para hoy:', error);
       throw new InternalServerErrorException(

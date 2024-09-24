@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class TopicService {
-
   constructor(
     @InjectRepository(Topic)
     private topicRepository: Repository<Topic>
@@ -16,6 +15,6 @@ export class TopicService {
   }
 
   async findOne(id: number) {
-    return await this.topicRepository.findOne({where : {id}});
+    return await this.topicRepository.findOne({ where: { id } });
   }
 }

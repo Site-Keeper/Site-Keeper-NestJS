@@ -54,7 +54,7 @@ export class TaskController {
   @PrivateService()
   @Permissions('can_read')
   @toTheEntity('tasks')
-  @Get("statistics")
+  @Get('statistics')
   @ApiDocGelAllTask(Task)
   async findStatistics() {
     return this.taskService.findStatistics();

@@ -14,7 +14,11 @@ import { TaskService } from 'src/task/task.service';
 import { TaskModule } from 'src/task/task.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Role, Routine, Task, Topic]), RoutineModule, TaskModule],
+  imports: [
+    TypeOrmModule.forFeature([User, Role, Routine, Task, Topic]),
+    RoutineModule,
+    TaskModule,
+  ],
   controllers: [UserController],
   providers: [UserService, JwtService, RoutineService, TaskService],
 })

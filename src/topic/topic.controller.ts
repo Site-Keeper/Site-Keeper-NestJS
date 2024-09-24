@@ -1,6 +1,9 @@
-import { Controller, Get, Param, } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { TopicService } from './topic.service';
-import { ApiDocGelAllTopic, ApiDocGelByIdTopic } from './docs/topic.swager.decorator';
+import {
+  ApiDocGelAllTopic,
+  ApiDocGelByIdTopic,
+} from './docs/topic.swager.decorator';
 import { Topic } from './entities/topic.entity';
 
 @Controller('topic')
