@@ -43,7 +43,7 @@ export class TaskService {
         async (createTaskDto): Promise<Partial<Task>> => {
           const routine = await this.RoutineRepository.findOne({
             where: { id: createTaskDto.routine_id, is_deleted: false },
-            relations: ['assignedTo'],
+            relations: ['assigned_to'],
           });
           console.log(routine);
           const spaces = await axios.get(`${this.javaServiceUrl}`, config);
@@ -68,14 +68,13 @@ export class TaskService {
             created_by: user.id,
             updated_by: user.id,
           };
-          console.log(routine.assignedTo.personnel_type, topic.name);
-          const personnelType = routine.assignedTo.personnel_type
+          console.log(routine.assigned_to.personnel_type, topic.name);
+          const personnelType = routine.assigned_to.personnel_type
             .trim()
             .toLowerCase();
           const topicName = topic.name.trim().toLowerCase();
           if (personnelType !== topicName) {
             delete task.routine;
-            console.log('ssddfsfdsdfsfds');
             InvalidTask.push(task);
             return;
           }
@@ -113,10 +112,14 @@ export class TaskService {
   }
 
   async findAll() {
-    const tasks = await this.tasksRepository.find({
-      where: { is_deleted: false },
-    });
-    return { stastusCode: 200, message: 'Get all Tasks', data: tasks };
+    try {
+      const tasks = await this.tasksRepository.find({
+        where: { is_deleted: false },
+      });
+      return tasks;
+    } catch (error) {
+      return error;
+    }
   }
 
   async findStatistics() {
@@ -139,10 +142,14 @@ export class TaskService {
   }
 
   async findOne(id: number) {
-    const task = await this.tasksRepository.findOne({
-      where: { id, is_deleted: false },
-    });
-    return { stastusCode: 200, message: 'Get Task by id', data: task };
+    try {
+      const task = await this.tasksRepository.findOne({
+        where: { id, is_deleted: false },
+      });
+      return task;
+    } catch (error) {
+      return error;
+    }
   }
 
   async findByRoutine(routine_id: number, token: string) {
