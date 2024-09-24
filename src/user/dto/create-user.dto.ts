@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsNumber, IsOptional, Max, Min } from 'class-validator';
-import { perssonelType } from 'src/enums/perssonel-type.enum';
+import { personnelType } from 'src/enums/personnel-type.enum';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -22,10 +22,10 @@ export class CreateUserDto {
 
   @ApiPropertyOptional({
     description: 'The type of personnel',
-    enum: perssonelType,
-    example: perssonelType.JANITORIAL,
+    enum: personnelType,
+    example: personnelType.JANITORIAL,
   })
   @IsOptional()
-  @IsEnum(perssonelType)
-  perssonel_type?: perssonelType;
+  @IsEnum(personnelType)
+  personnel_type?: personnelType;
 }

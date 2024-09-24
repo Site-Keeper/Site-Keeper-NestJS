@@ -49,7 +49,7 @@ export class Routine {
   })
   days: string[];
 
-  @ManyToOne(() => User,{
+  @ManyToOne(() => User, {
     eager: true,
   })
   @JoinColumn({ name: 'assigned_to' })

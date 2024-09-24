@@ -21,13 +21,12 @@ async function bootstrap() {
   );
 
   const corsOptions: CorsOptions = {
-    origin: 'http://localhost:5173', // Cambia esto por el dominio de tu front-end
+    origin: true, // Permite todos los orígenes
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true, // Habilita el uso de cookies o credenciales
+    credentials: true, // Permite el uso de cookies o credenciales
   };
 
   app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header(
       'Access-Control-Allow-Methods',
@@ -40,6 +39,7 @@ async function bootstrap() {
     next();
   });
 
+  // Habilita CORS con las opciones configuradas
   app.enableCors(corsOptions);
 
   const config = new DocumentBuilder()

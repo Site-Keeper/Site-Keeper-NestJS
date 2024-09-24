@@ -50,7 +50,7 @@ export class UserController {
   @Role(['admin'])
   @Permissions('can_read')
   @toTheEntity('users')
-  @Get("statistics")
+  @Get('statistics')
   async findStatisticsUser() {
     return this.userService.userStatistics();
   }

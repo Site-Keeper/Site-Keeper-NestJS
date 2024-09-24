@@ -3,7 +3,6 @@ import { DataSource } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { Role } from 'src/entities/role.entity';
-import { perssonelType } from 'src/enums/perssonel-type.enum';
 
 export default class CreateUsers implements Seeder {
   public async run(dataSource: DataSource): Promise<void> {
@@ -12,7 +11,7 @@ export default class CreateUsers implements Seeder {
     const roleRepository = dataSource.getRepository(Role);
 
     const adminRole = await roleRepository.findOne({ where: { id: 1 } });
-    const perssonelRole = await roleRepository.findOne({ where: { id: 2 } });
+    const personnelRole = await roleRepository.findOne({ where: { id: 2 } });
     const employedRole = await roleRepository.findOne({ where: { id: 3 } });
 
     const usersData = [
@@ -26,11 +25,11 @@ export default class CreateUsers implements Seeder {
         updated_by: 1,
       },
       {
-        name: 'Perssonel',
+        name: 'Personnel',
         doc_number: 654321,
         password: bcrypt.hashSync('654321', 10),
-        email: 'perssonel@correo.com',
-        role: perssonelRole,
+        email: 'personnel@correo.com',
+        role: personnelRole,
         created_by: 1,
         updated_by: 1,
       },
@@ -40,7 +39,7 @@ export default class CreateUsers implements Seeder {
         password: bcrypt.hashSync('1234560', 10),
         email: 'employed@correo.com',
         role: employedRole,
-        perssonelType: perssonelType.MAINTENANCE,
+        personnelType: 'Maintenance',
         created_by: 1,
         updated_by: 1,
       },
@@ -50,7 +49,7 @@ export default class CreateUsers implements Seeder {
         password: bcrypt.hashSync('1234561', 10),
         email: 'employed2@correo.com',
         role: employedRole,
-        perssonelType: perssonelType.SECURITY,
+        personnelType: 'Security',
         created_by: 1,
         updated_by: 1,
       },
@@ -60,7 +59,7 @@ export default class CreateUsers implements Seeder {
         password: bcrypt.hashSync('1234562', 10),
         email: 'employed3@correo.com',
         role: employedRole,
-        perssonelType: perssonelType.JANITORIAL,
+        personnelType: 'Janitorial',
         created_by: 1,
         updated_by: 1,
       },

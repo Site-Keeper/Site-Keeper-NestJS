@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from 'src/entities/role.entity';
-import { perssonelType } from 'src/enums/perssonel-type.enum';
+import { personnelType } from 'src/enums/personnel-type.enum';
 import { Routine } from 'src/routine/entities/routine.entity';
 import {
   Column,
@@ -66,12 +66,12 @@ export class User {
 
   @ApiProperty({
     description: 'The personnel type of the user',
-    enum: perssonelType,
-    example: perssonelType.JANITORIAL,
+    enum: personnelType,
+    example: personnelType.JANITORIAL,
     nullable: true,
   })
   @Column({ nullable: true })
-  perssonel_type: perssonelType;
+  personnel_type: personnelType;
 
   @ApiProperty({
     description: 'Indicates if the user is deleted (soft delete)',

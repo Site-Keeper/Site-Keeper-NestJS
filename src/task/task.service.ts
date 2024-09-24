@@ -68,8 +68,8 @@ export class TaskService {
             created_by: user.id,
             updated_by: user.id,
           };
-          console.log(routine.assigned_to.perssonel_type, topic.name);
-          const personnelType = routine.assigned_to.perssonel_type
+          console.log(routine.assigned_to.personnel_type, topic.name);
+          const personnelType = routine.assigned_to.personnel_type
             .trim()
             .toLowerCase();
           const topicName = topic.name.trim().toLowerCase();
@@ -185,7 +185,7 @@ export class TaskService {
 
   async update(id: number, UpdateTaskDto: UpdateTaskDto, user: UserJWT) {
     try {
-      if (user.role.name === 'perssonel') {
+      if (user.role.name === 'personnel') {
         if (Object.keys(UpdateTaskDto).length > 1) {
           throw new UnauthorizedException(
             'solo puedes actualizar el estado unicamente '
@@ -236,7 +236,7 @@ export class TaskService {
 
   async restore(id: number, user: UserJWT) {
     try {
-      if (user.role.name === 'perssonel') {
+      if (user.role.name === 'personnel') {
         throw new UnauthorizedException(
           'solo puedes actualizar el estado unicamente '
         );
