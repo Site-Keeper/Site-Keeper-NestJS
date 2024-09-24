@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { CreateRoutineDto } from './dto/create-routine.dto';
 import { UpdateRoutineDto } from './dto/update-routine.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,11 +22,7 @@ export class RoutineService {
     private taskService: TaskService
   ) {}
 
-  async create(
-    createRoutineDto: CreateRoutineDto,
-    userReq: UserJWT,
-    token: string
-  ) {
+  async create(createRoutineDto: CreateRoutineDto, userReq: UserJWT) {
     try {
       const user = await this.userRepository.findOne({
         where: { id: createRoutineDto.assigned_to, is_deleted: false },
@@ -37,18 +37,26 @@ export class RoutineService {
         created_by: userReq.id,
         updated_by: userReq.id,
       };
-      const routine = await this.routineRepository.save(newRoutine);
-      const tasks = createRoutineDto.task.map((task) => {
-        return { ...task, routine_id: routine.id };
+      const routinesByUser = await this.routineRepository.find({
+        where: { is_deleted: false, assigned_to: { id: user.id } },
       });
-      const task = await this.taskService.create(tasks, userReq, token);
+      routinesByUser.forEach((routineDays) => {
+        const days = routineDays.days;
+        days.forEach((day) => {
+          if (createRoutineDto.days.includes(day)) {
+            throw new BadRequestException(
+              'The user already has a routine scheduled for this day'
+            );
+          }
+        });
+      });
+      await this.routineRepository.save(newRoutine);
       delete newRoutine.assigned_to;
       return {
         statusCode: 201,
         message: 'routine created successfully',
         data: {
           responseRoutine: { ...newRoutine, assigned_to: user.id },
-          responseTask: { task },
         },
       };
     } catch (error) {
@@ -65,11 +73,10 @@ export class RoutineService {
     try {
       const routines = await this.routineRepository.find({
         where: { is_deleted: false },
-        relations: { assigned_to: true },
+        relations: { assigned_to: true, tasks: true },
       });
       const routineRespos = routines.map((routine) => {
         const name = routine.assigned_to.name;
-        console.log(name);
         delete routine.assigned_to;
         return { ...routine, assigned_to: name };
       });
@@ -106,10 +113,9 @@ export class RoutineService {
         where: { is_deleted: false, assigned_to: { id } },
         relations: ['assigned_to'],
       });
-      console.log(routines, id);
-      const todayRoutines = routines.find((routine) =>
-        routine.days.includes(today)
-      );
+      const todayRoutines = routines.find((routine) => {
+        return routine.days.includes(today);
+      });
       return { todayRoutines };
     } catch (error) {
       console.error('Error al obtener rutinas para hoy:', error);
