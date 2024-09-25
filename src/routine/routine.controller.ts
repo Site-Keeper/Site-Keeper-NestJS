@@ -48,7 +48,8 @@ export class RoutineController {
   @Get('today')
   async getRoutinesForToday(@Request() req) {
     const user: UserJWT = req.user;
-    return this.routineService.findRoutinesForToday(user.id);
+    const token: string = req.headers.authorization;
+    return this.routineService.findRoutinesForToday(user.id, token);
   }
 
   @PrivateService()
