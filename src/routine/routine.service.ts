@@ -11,9 +11,13 @@ import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { TaskService } from 'src/task/task.service';
 import { UserJWT } from 'src/common/interfaces/jwt.interface';
+import axios, { AxiosRequestConfig } from 'axios';
 
 @Injectable()
 export class RoutineService {
+  private readonly javaServiceUrl =
+    'https://site-keeper-springboot.onrender.com/api/spaces';
+
   constructor(
     @InjectRepository(Routine)
     private routineRepository: Repository<Routine>,
@@ -104,24 +108,48 @@ export class RoutineService {
     }
   }
 
-  async findRoutinesForToday(id: number) {
+  async findRoutinesForToday(id: number, token: string) {
+    const config: AxiosRequestConfig = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+  
     try {
       const today = new Intl.DateTimeFormat('en-US', {
         weekday: 'long',
       }).format(new Date());
+  
       const routines = await this.routineRepository.find({
         where: { is_deleted: false, assigned_to: { id } },
         relations: ['assigned_to', 'tasks'],
       });
-      const todayRoutines = routines.find((routine) => {
-        return routine.days.includes(today);
+  
+      const todayRoutines = routines.find(routine => routine.days.includes(today));
+  
+      if (!todayRoutines) {
+        return { todayRoutines: null };
+      }
+  
+      const spacesResponse = await axios.get(`${this.javaServiceUrl}`, config);
+      const spacesMap = spacesResponse.data.reduce((acc: Record<number, ISpace>, space: ISpace) => {
+        acc[space.id] = { id: space.id, name: space.name, location: space.location }; 
+        return acc;
+      }, {});
+  
+      const tasksWithSpaces = todayRoutines.tasks.map(task => {
+        const space = spacesMap[task.space_id];
+        return {
+          ...task,
+          space: space || null, // Añadimos el espacio si existe
+        };
       });
-      return { todayRoutines };
+  
+      return { todayRoutines: { ...todayRoutines, tasks: tasksWithSpaces } };
     } catch (error) {
       console.error('Error al obtener rutinas para hoy:', error);
-      throw new InternalServerErrorException(
-        'Error al obtener rutinas para hoy'
-      );
+      throw new InternalServerErrorException('Error al obtener rutinas para hoy');
     }
   }
 

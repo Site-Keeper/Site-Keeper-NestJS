@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
+import { personnelType } from 'src/enums/personnel-type.enum';
 
 @Injectable()
 export class AuthService {
@@ -54,6 +55,7 @@ export class AuthService {
         doc_number: verifiedUser.doc_number,
         name: verifiedUser.name,
         email: verifiedUser.email,
+        personnelType: verifiedUser.personnel_type,
         role: verifiedUser.role,
       };
       return {
