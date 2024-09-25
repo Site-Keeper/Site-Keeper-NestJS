@@ -48,7 +48,9 @@ export class Task {
   routine: Routine;
 
   @ApiProperty({ type: () => Topic, example: 1 })
-  @ManyToOne(() => Topic)
+  @ManyToOne(() => Topic, {
+    eager: true,
+  })
   @JoinColumn({ name: 'topic_id' })
   topic: Topic;
 
