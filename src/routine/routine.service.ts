@@ -91,7 +91,7 @@ export class RoutineService {
     try {
       const routines = await this.routineRepository.find({
         where: { is_deleted: false, assigned_to: { id } },
-        relations: ['assigned_to'],
+        relations: ['assigned_to', 'tasks'],
       });
       const routineRespos = routines.map((routine) => {
         const name = routine.assigned_to.name;
@@ -111,7 +111,7 @@ export class RoutineService {
       }).format(new Date());
       const routines = await this.routineRepository.find({
         where: { is_deleted: false, assigned_to: { id } },
-        relations: ['assigned_to'],
+        relations: ['assigned_to', 'tasks'],
       });
       const todayRoutines = routines.find((routine) => {
         return routine.days.includes(today);
