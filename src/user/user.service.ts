@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -28,68 +27,61 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto, userID: number) {
-    try {
-      const role = await this.roleRepository.findOneBy({
-        id: createUserDto.role_id,
+    const role = await this.roleRepository.findOneBy({
+      id: createUserDto.role_id,
+    });
+
+    if (!role) {
+      throw new BadRequestException('El rol especificado no existe.');
+    }
+
+    const usersResponse: Partial<User>[] = [];
+
+    for (const docNumber of createUserDto.doc_numbers) {
+      const existingUser = await this.userRepository.findOneBy({
+        doc_number: docNumber,
       });
 
-      if (!role) {
-        throw new BadRequestException('El rol especificado no existe.');
-      }
+      if (existingUser) {
+        if (existingUser.is_deleted) {
+          existingUser.is_deleted = false;
+          existingUser.updated_by = userID;
+          existingUser.role = role;
+          await this.userRepository.save(existingUser);
 
-      const usersResponse: Partial<User>[] = [];
+          delete existingUser.password;
+          delete existingUser.updated_at;
+          delete existingUser.updated_by;
+          delete existingUser.role.permissions;
 
-      for (const docNumber of createUserDto.doc_numbers) {
-        const existingUser = await this.userRepository.findOneBy({
-          doc_number: docNumber,
-        });
-
-        if (existingUser) {
-          if (existingUser.is_deleted) {
-            existingUser.is_deleted = false;
-            existingUser.updated_by = userID;
-            existingUser.role = role;
-            await this.userRepository.save(existingUser);
-
-            delete existingUser.password;
-            delete existingUser.updated_at;
-            delete existingUser.updated_by;
-            delete existingUser.role.permissions;
-
-            usersResponse.push(existingUser);
-          } else {
-            throw new BadRequestException(
-              `El usuario con número de documento ${docNumber} ya existe y no está eliminado.`
-            );
-          }
+          usersResponse.push(existingUser);
         } else {
-          const newUser: Partial<User> = {
-            doc_number: docNumber,
-            password: bcrypt.hashSync(docNumber.toString(), 10),
-            role: role,
-            personnel_type: createUserDto.personnel_type || null,
-            created_by: userID,
-            updated_by: userID,
-          };
-
-          const savedUser = await this.userRepository.save(newUser);
-
-          delete savedUser.password;
-          delete savedUser.updated_at;
-          delete savedUser.updated_by;
-          delete savedUser.role.permissions;
-
-          usersResponse.push(savedUser);
+          throw new BadRequestException(
+            `El usuario con número de documento ${docNumber} ya existe y no está eliminado.`
+          );
         }
-      }
+      } else {
+        const newUser: Partial<User> = {
+          doc_number: docNumber,
+          password: bcrypt.hashSync(docNumber.toString(), 10),
+          role: role,
+          personnel_type: createUserDto.personnel_type || null,
+          created_by: userID,
+          updated_by: userID,
+        };
 
-      return usersResponse;
-    } catch (error) {
-      console.error('Error during user creation:', error);
-      throw new InternalServerErrorException(
-        'Error al crear o actualizar usuarios.'
-      );
+        const savedUser = await this.userRepository.save(newUser);
+
+        delete savedUser.password;
+        delete savedUser.updated_at;
+        delete savedUser.updated_by;
+        delete savedUser.role.permissions;
+
+        usersResponse.push(savedUser);
+      }
     }
+
+    return usersResponse;
   }
 
   async findAll(type?: string, role?: number) {
@@ -162,29 +154,21 @@ export class UserService {
   }
 
   async userStatistics() {
-    try {
-      const users: User[] = await this.userRepository.find({
-        relations: ['role'],
-      });
-      const usersAdmin = users.filter((user) => user.role.name === 'admin');
-      const usersPerssonel = users.filter(
-        (user) => user.role.name === 'perssonel'
-      );
-      const usersEmployed = users.filter(
-        (user) => user.role.name === 'employed'
-      );
+    const users: User[] = await this.userRepository.find({
+      relations: ['role'],
+    });
+    const usersAdmin = users.filter((user) => user.role.name === 'admin');
+    const usersPersonnel = users.filter(
+      (user) => user.role.name === 'personnel'
+    );
+    const usersEmployed = users.filter((user) => user.role.name === 'employed');
 
-      return {
-        total: users.length,
-        admin: usersAdmin.length,
-        perssonel: usersPerssonel.length,
-        employed: usersEmployed.length,
-      };
-    } catch (error) {
-      throw new InternalServerErrorException(
-        'Error al crear o actualizar usuarios.'
-      );
-    }
+    return {
+      total: users.length,
+      admin: usersAdmin.length,
+      personnel: usersPersonnel.length,
+      employed: usersEmployed.length,
+    };
   }
 
   async update(id: number, updateUserDto: UpdateUserDto, userJWT: UserJWT) {
