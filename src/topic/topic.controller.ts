@@ -5,8 +5,10 @@ import {
   ApiDocGelByIdTopic,
 } from './docs/topic.swager.decorator';
 import { Topic } from './entities/topic.entity';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('topic')
+@ApiTags('Topics')
 export class TopicController {
   constructor(private readonly topicService: TopicService) {}
 
