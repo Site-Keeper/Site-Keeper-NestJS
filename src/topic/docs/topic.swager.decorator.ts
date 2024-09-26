@@ -9,8 +9,8 @@ import {
 export function ApiDocGelAllTopic<T>(Entity: Type<T>) {
   return applyDecorators(
     ApiOperation({
-      summary: '',
-      description: '',
+      summary: 'Get all topics',
+      description: 'Retrieve a list of all topics from the database.',
     }),
     ApiSuccessResponsesArray(Entity),
     ApiBadRequest()
@@ -20,8 +20,8 @@ export function ApiDocGelAllTopic<T>(Entity: Type<T>) {
 export function ApiDocGelByIdTopic<T>(Entity: Type<T>) {
   return applyDecorators(
     ApiOperation({
-      summary: '',
-      description: '',
+      summary: 'Get topic by ID',
+      description: 'Retrieve a specific topic from the database by its ID.',
     }),
     ApiSuccessResponses(Entity),
     ApiBadRequest()

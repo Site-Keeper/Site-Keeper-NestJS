@@ -1,40 +1,40 @@
+
 # Task Manager API
 
-## ES
+## EN
 
-Una API para gestionar tareas, diseñada utilizando NestJS y TypeORM con una base de datos PostgreSQL. Esta aplicación permite a los usuarios crear, leer, actualizar y eliminar tareas, así como gestionar roles y  permisos.
+An API to manage tasks, designed using NestJS and TypeORM with a PostgreSQL database. This application allows users to create, read, update, and delete tasks, as well as manage roles and permissions.
 
-## Características
+## Features
 
-- **Gestión de Tareas**: Crea, lee, actualiza y elimina tareas.
-- **Gestión de Usuarios**: Crea y gestiona usuarios con diferentes roles.
-- **Roles y Permisos**: Asigna roles y permisos a los usuarios para controlar el acceso a diferentes funcionalidades.
-- **Base de Datos Relacional**: Utiliza PostgreSQL para almacenar los datos.
+- **Task Management**: Create, read, update, and delete tasks.
+- **User Management**: Create and manage users with different roles.
+- **Roles and Permissions**: Assign roles and permissions to users to control access to various features.
+- **Relational Database**: Uses PostgreSQL to store data.
 
-## Tecnologías y Herramientas
+## Technologies and Tools
 
-- **NestJS**: Framework para construir aplicaciones del lado del servidor con Node.js.
-- **TypeORM**: ORM para manejar la base de datos.
-- **PostgreSQL**: Sistema de gestión de bases de datos relacional.
-- **TypeScript**: Lenguaje de programación basado en JavaScript que añade tipado estático.
-- **Docker** (opcional): Para contenerizar la aplicación y la base de datos.
-
+- **NestJS**: Framework for building server-side applications with Node.js.
+- **TypeORM**: ORM to manage the database.
+- **PostgreSQL**: Relational database management system.
+- **TypeScript**: A statically typed language based on JavaScript.
+- **Docker** (optional): To containerize the application and the database.
 
 # Site-Keeper-NestJS
 
-Este proyecto utiliza [NestJS](https://nestjs.com/) como framework principal y está diseñado para gestionar tareas relacionadas con la administración de sitios web. El proyecto implementa autenticación, gestión de usuarios y roles, además de funcionalidades relacionadas con sitios web.
+This project uses [NestJS](https://nestjs.com/) as the main framework and is designed to manage tasks related to website administration. The project implements authentication, user and role management, and site-related features.
 
-## Requisitos Previos
+## Prerequisites
 
-Antes de comenzar, asegúrate de tener instalados los siguientes programas:
+Before starting, ensure you have the following installed:
 
-- [Node.js](https://nodejs.org/) (versión 14 o superior)
-- [npm](https://www.npmjs.com/) (versión 6 o superior)
-- [PostgreSQL](https://www.postgresql.org/) como base de datos
+- [Node.js](https://nodejs.org/) (version 14 or higher)
+- [npm](https://www.npmjs.com/) (version 6 or higher)
+- [PostgreSQL](https://www.postgresql.org/) as the database
 
-## Paso a Paso para Configurar el Proyecto
+## Setup Instructions
 
-### 1. Clonar el repositorio
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/Site-Keeper/Site-Keeper-NestJS.git
@@ -42,105 +42,106 @@ cd Site-Keeper-NestJS
 code -r
 ```
 
-### 2. Instalar dependencias
+### 2. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Configurar las Variables de Entorno
+### 3. Configure Environment Variables
 
-Copia el archivo `.env.example` y renómbralo como `.env`:
+Copy the `.env.example` file and rename it to `.env`:
 
 ```bash
 cp .env.example .env
 ```
 
-Edita el archivo `.env` con los valores correctos:
+Edit the `.env` file with the correct values:
 
 ```bash
-# Ejemplo de configuración
-DATABASE_URL=postgres://usuario:password@localhost:5432/nombre_base_de_datos
-JWT_SECRET=tu_secreto_para_jwt
+# Example configuration
+DATABASE_URL=postgres://user:password@localhost:5432/database_name
+JWT_SECRET=your_jwt_secret
 ```
 
-### 4. Configurar la Base de Datos
+### 4. Set Up the Database
 
-Asegúrate de tener PostgreSQL corriendo y crea una base de datos:
+Ensure PostgreSQL is running and create a database:
 
 ```bash
 CREATE DATABASE site_keeper_db;
 ```
 
-La migración se realiza desde el paso "6" al realizar el "npm run start:dev" :
+Migration occurs during step "6" when running "npm run start:dev".
 
-### 5. Documentación de la API
+### 5. API Documentation
 
-La documentación de la API está disponible usando Swagger. Para acceder, inicia el servidor y ve a:
+API documentation is available using Swagger. To access it, start the server and go to:
 
 ```bash
 https://site-keeper-nestjs.onrender.com/api
 ```
 
-Esto te mostrará la interfaz Swagger con todos los endpoints disponibles y sus descripciones.
+This will show the Swagger interface with all available endpoints and their descriptions.
 
-### 6. Ejecutar el Servidor
+### 6. Run the Server
 
-Inicia el proyecto en modo de desarrollo con el siguiente comando:
+Start the project in development mode with the following command:
 
 ```bash
 npm run start:dev
 ```
 
-El servidor estará disponible en `http://localhost:3000`.
+The server will be available at `http://localhost:3000`.
 
-<!-- ### 7. Pruebas Unitarias
+<!-- ### 7. Unit Testing
 
-Para ejecutar las pruebas del proyecto, usa el comando:
+To run project tests, use the command:
 
 ```bash
 npm run test
 ``` -->
 
-## Estructura del Proyecto
+## Project Structure
 
 ```bash
 src/
-├── app.controller.ts        # Controlador principal de la aplicación.
-├── app.module.ts            # Módulo raíz que organiza los diferentes módulos de la aplicación.
-├── app.service.ts           # Servicio principal con lógica básica de negocio.
-├── main.ts                  # Punto de entrada de la aplicación, donde se inicia NestJS.
-├── config/                  # Configuraciones globales (e.g., base de datos, variables de entorno, etc.).
-│   └── database.config.ts   # Configuración de la conexión con la base de datos.
-├── modules/                 # Módulos que agrupan diferentes funcionalidades de la aplicación.
-│   ├── auth/                # Módulo de autenticación.
-│   │   ├── auth.controller.ts # Controlador para manejo de autenticación (login, register, etc.).
-│   │   ├── auth.module.ts     # Módulo que organiza el flujo de autenticación.
-│   │   └── auth.service.ts    # Servicio que contiene la lógica de autenticación.
-│   ├── users/               # Módulo de gestión de usuarios.
-│   │   ├── users.controller.ts # Controlador para operaciones de usuarios.
-│   │   ├── users.module.ts     # Módulo que organiza el flujo de usuarios.
-│   │   └── users.service.ts    # Servicio que contiene la lógica de usuarios.
-│   └── (otros módulos de la aplicación)
-├── common/                  # Elementos reutilizables entre varios módulos.
-│   ├── decorators/          # Decoradores personalizados.
-│   ├── filters/             # Filtros globales de excepciones.
-│   ├── guards/              # Guardias para proteger rutas (ej. autenticación).
-│   ├── interceptors/        # Interceptores que alteran la respuesta o petición.
-│   └── pipes/               # Pipes para transformar y validar datos.
-├── entities/                # Definiciones de las entidades o modelos de la base de datos.
-│   └── user.entity.ts       # Entidad que define la estructura de un usuario.
-├── interfaces/              # Interfaces para definir contratos de datos.
-│   └── user.interface.ts    # Interface que define los datos de un usuario.
-└── dto/                     # Objetos de Transferencia de Datos (Data Transfer Objects).
-    ├── create-user.dto.ts   # DTO para la creación de usuarios.
-    └── login-user.dto.ts    # DTO para el login de usuarios.
+├── app.controller.ts        # Main controller for the application.
+├── app.module.ts            # Root module organizing the application's modules.
+├── app.service.ts           # Main service with basic business logic.
+├── main.ts                  # Application entry point where NestJS starts.
+├── config/                  # Global configurations (e.g., database, environment variables, etc.).
+│   └── database.config.ts   # Database connection configuration.
+├── modules/                 # Modules grouping the application's functionalities.
+│   ├── auth/                # Authentication module.
+│   │   ├── auth.controller.ts # Controller for handling authentication (login, register, etc.).
+│   │   ├── auth.module.ts     # Module organizing the authentication flow.
+│   │   └── auth.service.ts    # Service containing the authentication logic.
+│   ├── users/               # User management module.
+│   │   ├── users.controller.ts # Controller for user operations.
+│   │   ├── users.module.ts     # Module organizing the user flow.
+│   │   └── users.service.ts    # Service containing the user logic.
+│   └── (other application modules)
+├── common/                  # Reusable elements across multiple modules.
+│   ├── decorators/          # Custom decorators.
+│   ├── filters/             # Global exception filters.
+│   ├── guards/              # Guards to protect routes (e.g., authentication).
+│   ├── interceptors/        # Interceptors to modify the request or response.
+│   └── pipes/               # Pipes for data transformation and validation.
+├── entities/                # Database entity or model definitions.
+│   └── user.entity.ts       # Entity defining the structure of a user.
+├── interfaces/              # Interfaces to define data contracts.
+│   └── user.interface.ts    # Interface defining user data.
+└── dto/                     # Data Transfer Objects (DTOs).
+    ├── create-user.dto.ts   # DTO for creating users.
+    └── login-user.dto.ts    # DTO for user login.
 
 ```
 
+## Additional Details
 
-## Detalles Adicionales
+- **Database**: This project uses PostgreSQL, but you can configure another database engine by adjusting the `DATABASE_URL` in the `.env` file.
+- **Authentication**: JWT is used to manage user authentication.
+- **Swagger**: Provides an easy way to document and test API endpoints.
 
-- **Base de datos**: Este proyecto utiliza PostgreSQL, pero puedes configurar otro motor de base de datos ajustando el `DATABASE_URL` en el archivo `.env`.
-- **Autenticación**: Se utiliza JWT para gestionar la autenticación de usuarios.
-- **Swagger**: Proporciona una forma fácil de documentar y probar los endpoints de la API.
+[Project Setup Documentation](./README.md)

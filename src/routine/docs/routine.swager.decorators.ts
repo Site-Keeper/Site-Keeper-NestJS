@@ -22,8 +22,30 @@ export function ApiDocPostRoutine<T>(entity: Type<T>) {
 export function ApiDocGelAllRoutine<T>(Entity: Type<T>) {
   return applyDecorators(
     ApiOperation({
-      summary: '',
-      description: '',
+      summary: ' Get all Routines ',
+      description: 'you can Get all Routines',
+    }),
+    ApiSuccessResponsesArray(Entity),
+    ApiBadRequest()
+  );
+}
+
+export function ApiDocGetRoutineToday<T>(Entity: Type<T>) {
+  return applyDecorators(
+    ApiOperation({
+      summary: 'Get Routine Today ',
+      description: 'you can Get Routine Today',
+    }),
+    ApiSuccessResponses(Entity),
+    ApiBadRequest()
+  );
+}
+
+export function ApiDocGetRoutineByUserId<T>(Entity: Type<T>) {
+  return applyDecorators(
+    ApiOperation({
+      summary: 'Get Routine by UserId ',
+      description: 'you can Get Routine by UserId',
     }),
     ApiSuccessResponsesArray(Entity),
     ApiBadRequest()
@@ -33,8 +55,8 @@ export function ApiDocGelAllRoutine<T>(Entity: Type<T>) {
 export function ApiDocGelByIdRoutine<T>(Entity: Type<T>) {
   return applyDecorators(
     ApiOperation({
-      summary: '',
-      description: '',
+      summary: 'Get Routine by ID ',
+      description: 'you can Get Routine by ID',
     }),
     ApiSuccessResponses(Entity),
     ApiBadRequest()
@@ -60,6 +82,17 @@ export function ApiDocDeleteRoutine<T>(entity: Type<T>) {
     ApiOperation({
       summary: 'Delete Routine ',
       description: 'you can Delete Routine',
+    }),
+    ApiCreateResponses(entity),
+    ApiBadRequest()
+  );
+}
+
+export function ApiDocPatchRestoreRoutine<T>(entity: Type<T>) {
+  return applyDecorators(
+    ApiOperation({
+      summary: 'Restore Routine ',
+      description: 'you can Restore Routine',
     }),
     ApiCreateResponses(entity),
     ApiBadRequest()
