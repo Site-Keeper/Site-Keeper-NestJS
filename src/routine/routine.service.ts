@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateRoutineDto } from './dto/create-routine.dto';
 import { UpdateRoutineDto } from './dto/update-routine.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -83,12 +79,7 @@ export class RoutineService {
       where: { is_deleted: false, assigned_to: { id } },
       relations: ['assigned_to', 'tasks'],
     });
-    const routineRespos = routines.map((routine) => {
-      const name = routine.assigned_to.name;
-      delete routine.assigned_to;
-      return { ...routine, assigned_to: name };
-    });
-    return routineRespos;
+    return routines;
   }
 
   async findRoutinesForToday(id: number, token: string) {

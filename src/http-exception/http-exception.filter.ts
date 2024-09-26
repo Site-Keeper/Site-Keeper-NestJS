@@ -85,7 +85,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
       const customMessage =
         typeof response === 'string'
           ? response
-          : response['message'] || 'Authentication is required to access this resource';
+          : response['message'] ||
+            'Authentication is required to access this resource';
 
       return {
         error: customMessage,
@@ -113,7 +114,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
       };
     } else if (exception instanceof HttpException) {
       return {
-        error: (exception.getResponse() as any)['message'] || 'An error occurred',
+        error:
+          (exception.getResponse() as any)['message'] || 'An error occurred',
         message: 'HTTP Error',
       };
     } else {
