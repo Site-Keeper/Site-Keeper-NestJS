@@ -60,7 +60,8 @@ export function ApiDocPatchUser<T>(Entity: Type<T>) {
   return applyDecorators(
     ApiOperation({
       summary: 'Update user details',
-      description: 'you can update user details by sending an object with the new details',
+      description:
+        'you can update user details by sending an object with the new details',
     }),
     ApiSuccessResponses(Entity),
     ApiBadRequest()

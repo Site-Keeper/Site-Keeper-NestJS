@@ -9,7 +9,8 @@ import {
 import { CreateTaskDto } from '../dto/create-task.dto';
 
 export function ApiDocPostTask<T>(entity: Type<T>) {
-  const description = 'You can create a new task by providing task details such as name, description, and other necessary fields.';
+  const description =
+    'You can create a new task by providing task details such as name, description, and other necessary fields.';
   return applyDecorators(
     ApiOperation({
       summary: 'Create new task',
@@ -60,7 +61,8 @@ export function ApiDocPatchTask<T>(entity: Type<T>) {
   return applyDecorators(
     ApiOperation({
       summary: 'Update task details',
-      description: 'You can update the details of an existing task by providing the necessary fields.',
+      description:
+        'You can update the details of an existing task by providing the necessary fields.',
     }),
     ApiBody({
       type: CreateTaskDto,
@@ -85,7 +87,8 @@ export function ApiDocPatchRetoreTask<T>(entity: Type<T>) {
   return applyDecorators(
     ApiOperation({
       summary: 'Restore task',
-      description: 'You can restore an existing task by its ID from the system.',
+      description:
+        'You can restore an existing task by its ID from the system.',
     }),
     ApiSuccessResponses(entity),
     ApiBadRequest()
