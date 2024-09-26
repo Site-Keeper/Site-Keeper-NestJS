@@ -19,7 +19,14 @@ import {
 } from 'src/common/decorators/permissions.decorator';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
-import { ApiDocPostUser } from './docs/users.swager.decorators';
+import {
+  ApiDocDeleteUser,
+  ApiDocGetAllUser,
+  ApiDocGetStatisticsUser,
+  ApiDocGetUserById,
+  ApiDocPatchUser,
+  ApiDocPostUser,
+} from './docs/users.swager.decorators';
 import { UserJWT } from 'src/common/interfaces/jwt.interface';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -45,6 +52,7 @@ export class UserController {
   @Get()
   @ApiQuery({ name: 'type', required: false })
   @ApiQuery({ name: 'role', required: false })
+  @ApiDocGetAllUser(User)
   async findAll(@Query('type') type?: string, @Query('role') role?: string) {
     return this.userService.findAll(type, +role);
   }
@@ -54,6 +62,7 @@ export class UserController {
   @Permissions('can_read')
   @toTheEntity('users')
   @Get('statistics')
+  @ApiDocGetStatisticsUser(User)
   async findStatisticsUser() {
     return this.userService.userStatistics();
   }
@@ -62,6 +71,7 @@ export class UserController {
   @Permissions('can_read')
   @toTheEntity('users')
   @Get(':id')
+  @ApiDocGetUserById(User)
   async findByID(@Param('id') id: string, @Request() req) {
     const user = req.user as UserJWT;
     return this.userService.findOne(+id, user);
@@ -77,6 +87,7 @@ export class UserController {
   @Permissions('can_update')
   @toTheEntity('users')
   @Patch(':id')
+  @ApiDocPatchUser(User)
   async update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -90,6 +101,7 @@ export class UserController {
   @Permissions('can_delete')
   @toTheEntity('users')
   @Delete(':id')
+  @ApiDocDeleteUser(User)
   async remove(@Param('id') id: string, @Request() req) {
     const user = req.user as UserJWT;
     const token: string = req.headers.authorization;

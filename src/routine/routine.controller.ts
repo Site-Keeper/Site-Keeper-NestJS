@@ -16,6 +16,9 @@ import {
   ApiDocDeleteRoutine,
   ApiDocGelAllRoutine,
   ApiDocGelByIdRoutine,
+  ApiDocGetRoutineByUserId,
+  ApiDocGetRoutineToday,
+  ApiDocPatchRestoreRoutine,
   ApiDocPatchRoutine,
   ApiDocPostRoutine,
 } from './docs/routine.swager.decorators';
@@ -46,6 +49,7 @@ export class RoutineController {
   @Permissions('can_read')
   @toTheEntity('routines')
   @Get('today')
+  @ApiDocGetRoutineToday(Routine)
   async getRoutinesForToday(@Request() req) {
     const user: UserJWT = req.user;
     const token: string = req.headers.authorization;
@@ -65,7 +69,7 @@ export class RoutineController {
   @Permissions('can_read')
   @toTheEntity('routines')
   @Get('ByUsers/:id')
-  @ApiDocGelAllRoutine(Routine)
+  @ApiDocGetRoutineByUserId(Routine)
   findByUser(@Param('id') id: string) {
     return this.routineService.findByUser(+id);
   }
@@ -108,6 +112,7 @@ export class RoutineController {
   @Permissions('can_update')
   @toTheEntity('routines')
   @Patch('restore/:id')
+  @ApiDocPatchRestoreRoutine(Routine)
   restore(@Param('id') id: string, @Request() req) {
     const user: UserJWT = req.user;
     return this.routineService.restore(+id, user);

@@ -13,8 +13,11 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Task } from './entities/task.entity';
 import {
+  ApiDocDeleteTask,
   ApiDocGelAllTask,
   ApiDocGelByIdTask,
+  ApiDocGetStatisticsTask,
+  ApiDocPatchRetoreTask,
   ApiDocPatchTask,
   ApiDocPostTask,
 } from './docs/task.swager.decoratos';
@@ -55,7 +58,7 @@ export class TaskController {
   @Permissions('can_read')
   @toTheEntity('tasks')
   @Get('statistics')
-  @ApiDocGelAllTask(Task)
+  @ApiDocGetStatisticsTask(Task)
   async findStatistics() {
     return this.taskService.findStatistics();
   }
@@ -96,6 +99,7 @@ export class TaskController {
   @PrivateService()
   @Permissions('can_delete')
   @toTheEntity('tasks')
+  @ApiDocDeleteTask(Task)
   @Delete(':id')
   async remove(@Param('id') id: string, @Request() req) {
     const user: UserJWT = req.user;
@@ -106,6 +110,7 @@ export class TaskController {
   @Permissions('can_update')
   @toTheEntity('tasks')
   @Patch('restore/:id')
+  @ApiDocPatchRetoreTask(Task)
   restore(@Param('id') id: string, @Request() req) {
     const user: UserJWT = req.user;
     return this.taskService.restore(+id, user);
